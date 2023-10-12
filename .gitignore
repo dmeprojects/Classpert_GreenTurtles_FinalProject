@@ -1,0 +1,12 @@
+
+#ignore stm32 driver folders
+drivers/
+EWARM/
+Middlewares/
+USB_HOST/
+
+#ignore all .o files
+*.o
+
+
+
