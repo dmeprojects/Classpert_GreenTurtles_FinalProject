@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "custom_pindefines.h"
+#include "state_defines.h"
 
 /* USER CODE END Includes */
 
@@ -76,6 +77,9 @@ void MX_USB_HOST_Process(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	unsigned char i;
+	ledState LedState = STROBE;	//Set the default
+
 
   /* USER CODE END 1 */
 
@@ -109,15 +113,40 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  /*Toglle LEDs with 100ms time between*/
-	  HAL_GPIO_TogglePin(GPIOD, LED_RED);
-	  HAL_Delay(100);
-	  HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
-	  HAL_Delay(100);
-	  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
-	  HAL_Delay(100);
-	  HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
-	  HAL_Delay(100);
+	  switch (LedState)
+	  {
+	  case ROTATE:
+		  /*Rotate LEDs with 100ms time between*/
+		  HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
+		  HAL_Delay(100);
+		  HAL_GPIO_TogglePin(GPIOD, LED_RED);
+		  HAL_Delay(100);
+		  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
+		  HAL_Delay(100);
+		  HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
+		  HAL_Delay(100);
+		  break;
+	  case POLICE:
+		  for (i = 0; i<4; i++)
+		  {
+			  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
+			  HAL_Delay(100);
+		  }
+		  for (i = 0; i<4; i++)
+		  {
+			  HAL_GPIO_TogglePin(GPIOD, LED_RED);
+			  HAL_Delay(100);
+		  }
+		  break;
+	  case STROBE:
+		  HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
+		  HAL_GPIO_TogglePin(GPIOD, LED_RED);
+		  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
+		  HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
+		  HAL_Delay(50);
+		  break;
+	  }
+
 
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();

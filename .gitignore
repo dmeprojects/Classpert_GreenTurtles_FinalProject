@@ -4,6 +4,7 @@ drivers/
 EWARM/
 Middlewares/
 USB_HOST/
+Debug/
 
 #ignore all .o files
 *.o
