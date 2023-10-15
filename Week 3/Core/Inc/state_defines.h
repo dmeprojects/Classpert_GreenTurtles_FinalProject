@@ -12,7 +12,8 @@ typedef enum
 {
 	ROTATE,
 	POLICE,
-	STROBE
+	STROBE,
+	MAXFUNCTIONS
 }ledState;
 
 

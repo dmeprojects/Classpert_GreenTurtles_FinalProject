@@ -67,6 +67,7 @@ void MX_USB_HOST_Process(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+ledState LedState = ROTATE;	//Set the default
 
 /* USER CODE END 0 */
 
@@ -77,8 +78,9 @@ void MX_USB_HOST_Process(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	unsigned char previousLedState = ROTATE;
 	unsigned char i;
-	ledState LedState = STROBE;	//Set the default
+	//ledState LedState = ROTATE;	//Set the default
 
 
   /* USER CODE END 1 */
@@ -113,6 +115,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if( LedState != previousLedState)
+	  {
+		  //Turn all LEDS off before beginning a new pattern
+		  HAL_GPIO_WritePin(GPIOD, LED_ORANGE, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOD, LED_RED, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOD, LED_BLUE, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOD, LED_GREEN, GPIO_PIN_RESET);
+
+		  previousLedState = LedState;
+	  }
+
 	  switch (LedState)
 	  {
 	  case ROTATE:
@@ -145,7 +158,12 @@ int main(void)
 		  HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
 		  HAL_Delay(50);
 		  break;
+	  case MAXFUNCTIONS:
+		  LedState = ROTATE;
+		  break;
 	  }
+
+	  //Read button state
 
 
     /* USER CODE END WHILE */
@@ -360,7 +378,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_EVT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
@@ -399,11 +417,30 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(MEMS_INT2_GPIO_Port, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if(GPIO_Pin == BUTTON1)
+  {
+    LedState++;
+    if (LedState >= MAXFUNCTIONS)
+    {
+    	LedState = ROTATE;
+    }
+  }
+  else
+  {
+      __NOP();
+  }
+}
 
 /* USER CODE END 4 */
 
