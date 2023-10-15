@@ -8,12 +8,12 @@
 #ifndef INC_CUSTOM_PINDEFINES_H_
 #define INC_CUSTOM_PINDEFINES_H_
 
-#define LED_GREEN	LD4
-#define	LED_RED		LD5
-#define	LED_ORANGE	LD3
-#define	LED_BLUE	LD6
+#define LED_GREEN	LD4_Pin
+#define	LED_RED		LD5_Pin
+#define	LED_ORANGE	LD3_Pin
+#define	LED_BLUE	LD6_Pin
 
-#define BUTTON1		B1
+#define BUTTON1		B1_Pin
 
 
 

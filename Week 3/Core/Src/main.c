@@ -109,6 +109,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  /*Toglle LEDs with 100ms time between*/
+	  HAL_GPIO_TogglePin(GPIOD, LED_RED);
+	  HAL_Delay(100);
+	  HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
+	  HAL_Delay(100);
+	  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
+	  HAL_Delay(100);
+	  HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
+	  HAL_Delay(100);
+
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();
 
