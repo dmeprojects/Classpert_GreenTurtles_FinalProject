@@ -7,7 +7,7 @@ Using a STM32 dev board to control inputs, outputs and timers
 The hardware used for this excercise is a STM32F407G-DISC1 board with an STM32F407 controller.
 
 ### Hardware block diagram
-![Hardware block diagram](/../images/BlockDiagram_LEDBLINK.png)
+![Hardware block diagram](/../Classpert_GreenTurtles/Week3/images/BlockDiagram_LEDBLINK.png)
 
 ### Software
 The software contains 3 LED patterns.  A button is used to switch between the patterns.
