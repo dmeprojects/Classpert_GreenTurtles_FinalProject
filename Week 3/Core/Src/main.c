@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "custom_pindefines.h"
 
 /* USER CODE END Includes */
 
