@@ -18,12 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usb_host.h"
+#include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "custom_pindefines.h"
 #include "state_defines.h"
+#include "app.h"
+
 
 /* USER CODE END Includes */
 
@@ -47,6 +49,8 @@ I2C_HandleTypeDef hi2c1;
 
 I2S_HandleTypeDef hi2s3;
 
+RNG_HandleTypeDef hrng;
+
 SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim2;
@@ -62,8 +66,7 @@ static void MX_I2C1_Init(void);
 static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
-void MX_USB_HOST_Process(void);
-
+static void MX_RNG_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -81,10 +84,6 @@ ledState LedState = ROTATE;	//Set the default
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	unsigned char previousLedState = ROTATE;
-	unsigned char i;
-	//ledState LedState = ROTATE;	//Set the default
-
 
   /* USER CODE END 1 */
 
@@ -109,8 +108,9 @@ int main(void)
   MX_I2C1_Init();
   MX_I2S3_Init();
   MX_SPI1_Init();
-  MX_USB_HOST_Init();
   MX_TIM2_Init();
+  MX_USB_DEVICE_Init();
+  MX_RNG_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -119,59 +119,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if( LedState != previousLedState)
-	  {
-		  //Turn all LEDS off before beginning a new pattern
-		  HAL_GPIO_WritePin(GPIOD, LED_ORANGE, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(GPIOD, LED_RED, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(GPIOD, LED_BLUE, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(GPIOD, LED_GREEN, GPIO_PIN_RESET);
-
-		  previousLedState = LedState;
-	  }
-
-	  switch (LedState)
-	  {
-	  case ROTATE:
-		  /*Rotate LEDs with 100ms time between*/
-		  HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
-		  HAL_Delay(100);
-		  HAL_GPIO_TogglePin(GPIOD, LED_RED);
-		  HAL_Delay(100);
-		  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
-		  HAL_Delay(100);
-		  HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
-		  HAL_Delay(100);
-		  break;
-	  case POLICE:
-		  for (i = 0; i<4; i++)
-		  {
-			  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
-			  HAL_Delay(100);
-		  }
-		  for (i = 0; i<4; i++)
-		  {
-			  HAL_GPIO_TogglePin(GPIOD, LED_RED);
-			  HAL_Delay(100);
-		  }
-		  break;
-	  case STROBE:
-		  HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
-		  HAL_GPIO_TogglePin(GPIOD, LED_RED);
-		  HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
-		  HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
-		  HAL_Delay(50);
-		  break;
-	  case MAXFUNCTIONS:
-		  LedState = ROTATE;
-		  break;
-	  }
-
-	  //Read button state
-
-
+	  mainApp();
     /* USER CODE END WHILE */
-    MX_USB_HOST_Process();
 
     /* USER CODE BEGIN 3 */
   }
@@ -288,6 +237,32 @@ static void MX_I2S3_Init(void)
   /* USER CODE BEGIN I2S3_Init 2 */
 
   /* USER CODE END I2S3_Init 2 */
+
+}
+
+/**
+  * @brief RNG Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RNG_Init(void)
+{
+
+  /* USER CODE BEGIN RNG_Init 0 */
+
+  /* USER CODE END RNG_Init 0 */
+
+  /* USER CODE BEGIN RNG_Init 1 */
+
+  /* USER CODE END RNG_Init 1 */
+  hrng.Instance = RNG;
+  if (HAL_RNG_Init(&hrng) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RNG_Init 2 */
+
+  /* USER CODE END RNG_Init 2 */
 
 }
 
