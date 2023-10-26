@@ -26,6 +26,7 @@
 #include "state_defines.h"
 #include "app.h"
 
+#include "console.h"
 
 /* USER CODE END Includes */
 
