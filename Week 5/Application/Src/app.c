@@ -4,6 +4,7 @@
  *  Created on: Oct 26, 2023
  *      Author: nick_
  */
+#define TEXT	"Test 123 ABC"
 
 #include "app.h"
 #include "main.h"
@@ -18,7 +19,7 @@ extern ledState LedState;
 void mainApp (void)
 {
 
-	unsigned char previousLedState = ROTATE;
+	static unsigned char previousLedState = ROTATE;
 	unsigned char i;
 
 	  if( LedState != previousLedState)
@@ -28,6 +29,8 @@ void mainApp (void)
 		  HAL_GPIO_WritePin(GPIOD, LED_RED, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(GPIOD, LED_BLUE, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(GPIOD, LED_GREEN, GPIO_PIN_RESET);
+
+		  CDC_Transmit_FS(TEXT, sizeof(TEXT));
 
 		  previousLedState = LedState;
 	  }
