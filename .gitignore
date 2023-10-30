@@ -1,9 +1,9 @@
 
 #ignore stm32 driver folders
-drivers/
-EWARM/
-Middlewares/
-USB_HOST/
+#drivers/
+#EWARM/
+#Middlewares/
+#USB_HOST/
 Debug/
 
 #ignore all .o files

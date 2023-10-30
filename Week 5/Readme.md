@@ -7,6 +7,8 @@ Using a STM32 dev board to control inputs, outputs and timers
 The hardware used for this excercise is a STM32F407G-DISC1 board with an STM32F407 controller.
 
 ### Hardware block diagram
+
+## TO BE UPDATED!
 ![Hardware block diagram](https://github.com/dmeprojects/Classpert_GreenTurtles/blob/main/Week%203/images/BlockDiagram_LEDBLINK.png)
 
 ### Software
