@@ -14,6 +14,8 @@
 #include "custom_pindefines.h"
 #include "state_defines.h"
 
+#include "console.h"
+
 extern ledState LedState;
 
 void mainApp (void)
@@ -21,6 +23,8 @@ void mainApp (void)
 
 	static unsigned char previousLedState = ROTATE;
 	unsigned char i;
+
+	//ConsoleProcess();
 
 	  if( LedState != previousLedState)
 	  {
