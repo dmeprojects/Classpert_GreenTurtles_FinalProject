@@ -267,6 +267,10 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	CDC_Transmit_FS(Buf, *Len);
 
 	//Write data to a usb buffer
+
+	/*
+	 * Add routine to copy buffer content to a safe place.
+	 * */
 	if (!usbCom.comReady)
 	{
 		usbCom.dataBuffer = Buf;
@@ -275,9 +279,6 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 
 		usbCom.comReady = 1;
 	}
-
-
-	//Set the USB receive flag
 
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
