@@ -48,6 +48,11 @@ eConsoleError ConsoleIoReceive(uint8_t *buffer, const uint32_t bufferLength, uin
 		readLength = &usbCom.bufferLength;
 		usbCom.comReady = 0;
 	}
+	else
+	{
+		buffer = NULL;
+		*readLength = 0;
+	}
 
 	return CONSOLE_SUCCESS;
 
