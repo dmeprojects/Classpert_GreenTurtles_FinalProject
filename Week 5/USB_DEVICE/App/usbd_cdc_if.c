@@ -22,6 +22,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
+#include "usbCom.h"
 
 /* USER CODE END INCLUDE */
 
@@ -266,6 +267,15 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	CDC_Transmit_FS(Buf, *Len);
 
 	//Write data to a usb buffer
+	if (!usbCom.comReady)
+	{
+		usbCom.dataBuffer = Buf;
+
+		usbCom.bufferLength = *Len;
+
+		usbCom.comReady = 1;
+	}
+
 
 	//Set the USB receive flag
 

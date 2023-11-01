@@ -14,9 +14,12 @@
 #include "custom_pindefines.h"
 #include "state_defines.h"
 
+#include "usbCom.h"
 #include "console.h"
 
 extern ledState LedState;
+
+struct usbCommunication usbCom;
 
 void mainApp (void)
 {

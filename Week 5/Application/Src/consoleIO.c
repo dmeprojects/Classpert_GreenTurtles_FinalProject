@@ -5,7 +5,8 @@
 #include <stdio.h>
 
 #include "usb_device.h"
-#include "usbd_cdc_if.h"
+
+#include "usbCom.h"
 
 eConsoleError ConsoleIoInit(void)
 {
@@ -37,11 +38,16 @@ eConsoleError ConsoleIoReceive(uint8_t *buffer, const uint32_t bufferLength, uin
 {
 	//uint32_t i = 0;
 	//char ch;
-	uint32_t LengthReceived;
-	uint8_t lBuffer[100];
 
 	//Read USB buffer
 	//CDC_Receive_FS(&lBuffer, &LengthReceived);
+
+	if (usbCom.comReady)
+	{
+		buffer = usbCom.dataBuffer;
+		readLength = &usbCom.bufferLength;
+		usbCom.comReady = 0;
+	}
 
 	return CONSOLE_SUCCESS;
 
