@@ -114,7 +114,7 @@ int main(void)
   MX_RNG_Init();
   /* USER CODE BEGIN 2 */
 
-  //ConsoleInit();
+  ConsoleInit();
 
   /* USER CODE END 2 */
 

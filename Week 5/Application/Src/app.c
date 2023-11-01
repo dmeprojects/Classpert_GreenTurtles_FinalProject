@@ -27,7 +27,7 @@ void mainApp (void)
 	static unsigned char previousLedState = ROTATE;
 	unsigned char i;
 
-	//ConsoleProcess();
+	ConsoleProcess();
 
 	  if( LedState != previousLedState)
 	  {

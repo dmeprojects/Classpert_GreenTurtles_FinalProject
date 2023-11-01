@@ -56,7 +56,17 @@ eConsoleError ConsoleIoReceive(uint8_t *buffer, const uint32_t bufferLength, uin
 eConsoleError ConsoleIoSendString(const char *buffer)
 {
 	//printf("%s", buffer);
-	CDC_Transmit_FS(buffer, sizeof(buffer));
+
+	uint16_t length = 0;;
+
+	for ( length = 0; length < 100 ; length++)
+	{
+		if (buffer[length] == 0)
+		{
+			break;
+		}
+	}
+	CDC_Transmit_FS(buffer, length);
 	return CONSOLE_SUCCESS;
 }
 
