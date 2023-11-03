@@ -273,9 +273,12 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	 * */
 	if (!usbCom.comReady)
 	{
-		usbCom.dataBuffer = Buf;
+		usbCom.bufferLength = 0;
 
-		usbCom.bufferLength = *Len;
+		for (usbCom.bufferLength = 0; usbCom.bufferLength < *Len; usbCom.bufferLength++)
+		{
+			usbCom.comBuffer[usbCom.bufferLength] = *Buf++;
+		}
 
 		usbCom.comReady = 1;
 	}
