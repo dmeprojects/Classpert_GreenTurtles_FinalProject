@@ -118,7 +118,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(3000);
+  HAL_Delay(5000);
 
   ConsoleInit();
 
