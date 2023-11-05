@@ -28,6 +28,8 @@
 
 #include "console.h"
 
+#include "accelerometer.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,9 +120,11 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(5000);
+  HAL_Delay(1000);
 
   ConsoleInit();
+
+  EnableImu();
 
   /* USER CODE END 2 */
 
