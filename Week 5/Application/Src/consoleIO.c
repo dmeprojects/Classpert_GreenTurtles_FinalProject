@@ -7,6 +7,7 @@
 #include "usb_device.h"
 
 #include "usbCom.h"
+#include "string.h"
 
 eConsoleError ConsoleIoInit(void)
 {
@@ -36,7 +37,7 @@ eConsoleError ConsoleIoInit(void)
 
 eConsoleError ConsoleIoReceive(uint8_t *buffer, const uint32_t bufferLength, uint32_t *readLength)
 {
-	//uint32_t i = 0;
+	uint32_t i = 0;
 	//char ch;
 
 	//Read USB buffer
@@ -44,11 +45,20 @@ eConsoleError ConsoleIoReceive(uint8_t *buffer, const uint32_t bufferLength, uin
 
 	if (usbCom.comReady)
 	{
-		buffer = usbCom.dataBuffer;
-		readLength = &usbCom.bufferLength;
+		for( i = 0; i< usbCom.bufferLength; i++)
+		{
+			buffer[i] = usbCom.comBuffer[i];
+		}
+
+		*readLength = usbCom.bufferLength;
+
 		usbCom.comReady = 0;
 	}
-
+	else
+	{
+		buffer = NULL;
+		*readLength = 0;
+	}
 	return CONSOLE_SUCCESS;
 
 }
@@ -57,16 +67,21 @@ eConsoleError ConsoleIoSendString(const char *buffer)
 {
 	//printf("%s", buffer);
 
-	uint16_t length = 0;;
+	uint16_t length = 0;
+	uint8_t usbStatus = USBD_OK;
 
-	for ( length = 0; length < 100 ; length++)
+	length = strlen(buffer);
+
+	usbStatus = CDC_Transmit_FS(buffer, length);
+
+	if (usbStatus == USBD_OK)
 	{
-		if (buffer[length] == 0)
-		{
-			break;
-		}
+		return CONSOLE_SUCCESS;
 	}
-	CDC_Transmit_FS(buffer, length);
-	return CONSOLE_SUCCESS;
+	else
+	{
+		return CONSOLE_ERROR;
+	}
+
 }
 

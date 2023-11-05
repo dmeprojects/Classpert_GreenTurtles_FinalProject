@@ -4,7 +4,7 @@
  *  Created on: Oct 26, 2023
  *      Author: nick_
  */
-#define TEXT	"Test 123 ABC"
+#define TEXT	"Test 123 ABC \r\n"
 
 #include "app.h"
 #include "main.h"
@@ -27,7 +27,7 @@ void mainApp (void)
 	static unsigned char previousLedState = ROTATE;
 	unsigned char i;
 
-	ConsoleProcess();
+	//ConsoleProcess();
 
 	  if( LedState != previousLedState)
 	  {
@@ -78,4 +78,6 @@ void mainApp (void)
 		  LedState = ROTATE;
 		  break;
 	  }
+
+	  ConsoleProcess();
 }

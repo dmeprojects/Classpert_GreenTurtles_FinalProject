@@ -10,6 +10,7 @@
 
 struct usbCommunication
 {
+	uint8_t comBuffer[100];
 	uint8_t comReady;
 	uint8_t * dataBuffer;
 	uint32_t bufferLength;
