@@ -4,7 +4,7 @@
  *  Created on: Oct 26, 2023
  *      Author: nick_
  */
-#define TEXT	"Test 123 ABC"
+#define TEXT	"Test 123 ABC \r\n"
 
 #include "app.h"
 #include "main.h"
