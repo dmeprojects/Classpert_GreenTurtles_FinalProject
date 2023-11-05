@@ -12,13 +12,18 @@
 #include "consoleIo.h"
 #include "version.h"
 
+#include "state_defines.h"
+
 #define IGNORE_UNUSED_VARIABLE(x)     if ( &x == &x ) {}
+
+extern ledState LedState;	//Set the default
 
 static eCommandResult_T ConsoleCommandComment(const char buffer[]);
 static eCommandResult_T ConsoleCommandVer(const char buffer[]);
 static eCommandResult_T ConsoleCommandHelp(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleInt16(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[]);
+static eCommandResult_T ConsoleCommandLedPattern(const char buffer[]);
 
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
@@ -27,6 +32,7 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"ver", ConsoleCommandVer, HELP("Get the version string")},
     {"int", ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
     {"u16h", ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
+	{"pattern", ConsoleCommandLedPattern, HELP("Set the LED pattern: 1 - 3")},
 
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
@@ -97,6 +103,71 @@ static eCommandResult_T ConsoleCommandVer(const char buffer[])
 
 	ConsoleIoSendString(VERSION_STRING);
 	ConsoleIoSendString(STR_ENDLINE);
+	return result;
+}
+
+static eCommandResult_T ConsoleCommandLedPattern(const char buffer[])
+{
+	int16_t parameterInt;
+	eCommandResult_T result;
+
+	result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);	//retrieve parameter
+
+	/*
+	 * Parameter			Function
+	 * 0					Return current pattern
+	 * 1					Set pattern on ROTATE
+	 * 2					Set pattern on POLICE
+	 * 3					Set pattern on STROBE
+	 * >3					return error
+	 * */
+
+	if (COMMAND_SUCCESS == result)
+	{
+		ConsoleIoSendString( "Current LED pattern: ");
+		switch (parameterInt)
+		{
+		case 0:
+			switch (LedState)
+			{
+			case ROTATE:
+				ConsoleSendLine( "ROTATE");
+				break;
+
+			case POLICE:
+				ConsoleSendLine( "POLICE");
+				break;
+
+			case STROBE:
+				ConsoleSendLine( "STROBE");
+				break;
+			default:
+				ConsoleSendLine("ERROR: unknown pattern");
+			break;
+			}
+
+			break;
+
+		case 1:
+			ConsoleSendLine("set to: ROTATE");
+			LedState = ROTATE;
+			break;
+
+		case 2:
+			ConsoleSendLine("set to: POLICE");
+			LedState = POLICE;
+			break;
+
+		case 3:
+			ConsoleSendLine("set to: STROBE");
+			LedState = STROBE;
+			break;
+
+		default:
+			ConsoleSendLine("ERROR: Unknown pattern, select a value between 0 - 3");
+			break;
+		}
+	}
 	return result;
 }
 
