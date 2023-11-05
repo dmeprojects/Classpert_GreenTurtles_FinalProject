@@ -37,7 +37,7 @@ void mainApp (void)
 		  HAL_GPIO_WritePin(GPIOD, LED_BLUE, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(GPIOD, LED_GREEN, GPIO_PIN_RESET);
 
-		  CDC_Transmit_FS(TEXT, sizeof(TEXT));
+		  //CDC_Transmit_FS(TEXT, sizeof(TEXT));
 
 		  previousLedState = LedState;
 	  }
