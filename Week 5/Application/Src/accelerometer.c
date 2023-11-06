@@ -61,7 +61,7 @@ void EnableImu(void)
 	HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin, GPIO_PIN_RESET);
 
 	//Read the CTRL_REG1 register
-	HAL_SPI_Transmit(&hspi1, (uint8_t *)&transmitData, 4, 100);
+	HAL_SPI_Transmit(&hspi1, (uint8_t *)&transmitData, 8, 100);
 	//HAL_Delay(5);
 	//HAL_SPI_Receive(&hspi1, receivedData, 1, 100);
 
