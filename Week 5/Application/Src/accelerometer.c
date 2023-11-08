@@ -50,20 +50,40 @@ void EnableImu(void)
 
 
 
-	//transmitData[0] = 0;
-	//transmitData[0] = 0b10000000 | WHO_AM_I;
-	transmitData[0] = WHO_AM_I;
-	//transmitData[1] = 0x80;
-	//transmitData[2] = 0b01010101;
-	//transmitData[2] = WHO_AM_I;
-	transmitData[3] = 0b10000000 | WHO_AM_I;
+	//Reset device using the SW reset bit
+	transmitData[0] = CTRL_REG1;
+	transmitData[1] = 0x00 | (1<<CTRL_REG1_SWRESET);
+
+	HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin, GPIO_PIN_RESET);
+
+	HAL_SPI_Transmit(&hspi1, &transmitData[0], 2, 100);
+
+	HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin, GPIO_PIN_SET);
+
+	HAL_Delay(1);
+
+	//Reset device usint ghet boot bit in the ctrl1 register
+	transmitData[0] = CTRL_REG1;
+	transmitData[1] = 0x00 | (1<<CTRL_REG1_BOOT);
+
+	HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin, GPIO_PIN_RESET);
+
+	HAL_SPI_Transmit(&hspi1, &transmitData[0], 2, 100);
+
+	HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin, GPIO_PIN_SET);
+
+	HAL_Delay(15);
+
+
+	//Read out the who am i register to verify correct operation
+	transmitData[0] = 0b10000000 | WHO_AM_I;
 
 	HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin, GPIO_PIN_RESET);
 
 	//Read the CTRL_REG1 register
-	HAL_SPI_Transmit(&hspi1, &transmitData[0], 8, 100);
+	HAL_SPI_Transmit(&hspi1, &transmitData[0], 1, 100);
 	//HAL_Delay(5);
-	//HAL_SPI_Receive(&hspi1, receivedData, 1, 100);
+	HAL_SPI_Receive(&hspi1, &receivedData[0], 1, 100);
 
 	//halStatus = HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&transmitData, (uint8_t*)&receivedData, 6, 100);
 

@@ -12,16 +12,17 @@
 
 
 /*Registers*/
-#define WHO_AM_I			0x0f
-#define	CTRL_REG1			0x20	//0000 0111 default
-#define CTRL_REG1_DR					7u
-#define CTRL_REG1_PD					6u
-#define CTRL_REG1_FS					5u
-#define CTRL_REG1_STP					4u
-#define CTRL_REG1_STM					3u
-#define CTRL_REG1_ZEN					2u
-#define CTRL_REG1_YEN					1u
-#define CTRL_REG1_XEN					0u
+#define WHO_AM_I						0x0f
+#define	CTRL_REG1						0x20	//0000 0111 default
+
+
+#define CTRL_REG1_NORMMODE				7u	//Normal mode enabled, default 0.  power down: 0, enable 1
+#define CTRL_REG1_IFADDINC				6u	//Register address auto increment during multiple byte access, default 1.  0: disabled, 1: enabled
+#define CTRL_REG1_BOOT					3u	// Reboot memory content, default 0.  0: disabled, 1 enabled
+#define CTRL_REG1_SWRESET				2u	//Software reset, default 0.  0: normal mode, 1: reset device
+#define CTRL_REG1_DRDYPULSE				1u	//Data ready on int 1 pin.  default 0.  0: DRDY latched, 1 DRDY pulsed (duration 1/4 ODR)
+#define CTRL_REG1_BDU					0u	//Block data update, default 0.  0: continous update, 1: output registers not updated until MSB and LSB read
+
 
 
 #define	CTRL_REG2			0x21
