@@ -11,6 +11,9 @@
 
 extern SPI_HandleTypeDef hspi1;
 
+static void writeImuRegister(uint8_t* address, uint8_t* data);
+static void readImuRegister(uint8_t* data, uint16_t bytes);
+
 
 
 
@@ -35,6 +38,11 @@ extern SPI_HandleTypeDef hspi1;
 //void AccellerationY (void);
 //void AccellerationZ (void);
 
+void resetImu (void)
+{
+
+}
+
 void EnableImu(void)
 {
 	//Set the PD bit to 1
@@ -48,8 +56,6 @@ void EnableImu(void)
 
 	HAL_Delay(10);
 
-
-
 	//Reset device using the SW reset bit
 	transmitData[0] = CTRL_REG1;
 	transmitData[1] = 0x00 | (1<<CTRL_REG1_SWRESET);
@@ -62,7 +68,7 @@ void EnableImu(void)
 
 	HAL_Delay(1);
 
-	//Reset device usint ghet boot bit in the ctrl1 register
+	//Reset device using the boot bit in the ctrl1 register
 	transmitData[0] = CTRL_REG1;
 	transmitData[1] = 0x00 | (1<<CTRL_REG1_BOOT);
 
@@ -92,6 +98,15 @@ void EnableImu(void)
 	regValue = receivedData[0];
 
 }
+
+/*
+ * writes the address to the IMU
+ * */
+static void writeImuRegister(uint8_t* address, uint8_t* data)
+{
+
+}
+static void readImuRegister(uint8_t* data, uint16_t bytes);
 
 
 

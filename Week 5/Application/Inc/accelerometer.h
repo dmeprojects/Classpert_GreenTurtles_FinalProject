@@ -13,8 +13,8 @@
 
 /*Registers*/
 #define WHO_AM_I						0x0f
-#define	CTRL_REG1						0x20	//0000 0111 default
 
+#define	CTRL_REG1						0x20	//0000 0111 default
 
 #define CTRL_REG1_NORMMODE				7u	//Normal mode enabled, default 0.  power down: 0, enable 1
 #define CTRL_REG1_IFADDINC				6u	//Register address auto increment during multiple byte access, default 1.  0: disabled, 1: enabled
@@ -24,33 +24,58 @@
 #define CTRL_REG1_BDU					0u	//Block data update, default 0.  0: continous update, 1: output registers not updated until MSB and LSB read
 
 
+#define	INT1_CTRL						0x21
 
-#define	CTRL_REG2			0x21
-#define	CTRL_REG3			0x22
-#define	HP_FILTER_RESET		0x23
-#define	STATUS_REG			0x27
-#define OUT_X				0x29
-#define OUT_Y				0x2B
-#define OUT_Z				0x2D
+#define INT2_CTRL						0x22
 
-#define FF_WU_CFG_1			0x30
-#define	FF_WU_SRC_1			0x31
-#define	FF_WU_THS_1			0x32
-#define	FF_WU_DURATION_1	0x33
-#define	FF_WU_CFG_2			0x34
-#define	FF_WU_CFG_3			0x35
-#define	FF_WU_THS_2			0x36
-#define	FF_WU_DURATION_2	0x37
-#define	CLICK_CFG			0x38
-#define	CLICK_SRC			0x39
-#define	CLICK_THSY_X		0x3b
-#define	CLICK_THSZ			0x3c
-#define	CLICK_TIMELIMIT		0x3d
-#define	CLICK_LATENCY		0x3e
-#define	CLICK_WINDOW		0x3f
+#define	CTRL_REG4						0x23
 
+#define CTRL_REG5						0x24
 
+#define	OUT_TEMP_L						0x25
 
+#define	OUT_TEMP_H						0x26
+
+#define	STATUS_REG						0x27
+
+#define STATUS_ZYXOR					7u
+#define STATUS_ZOR						6u
+#define STATUS_YOR						5u
+#define STATUS_XOR						4u
+#define STATUS_ZYXDA					3u
+#define STATUS_ZDA						2u
+#define STATUS_YDA						1u
+#define STATUS_XDA						0u
+
+#define OUT_X							0x28	//Read as 16 bit word in 2s complement
+
+#define	OUT_Y							0x2a	//Read as 16 bit word in 2s complement
+
+#define OUT_Z							0x2c	//Read as 16 bit word in 2s complement
+
+#define FIFO_CTRL						0x2e
+
+#define FIFO_FMODE2						7u
+#define FIFO_FMODE1						6u
+#define FIFO_FMODE0						5u
+#define FIFO_FTH4						4u
+#define FIFO_FTH3						3u
+#define FIFO_FTH2						2u
+#define FIFO_FTH1						1u
+#define FIFO_FTH0						0u
+
+#define FIFO_SRC						0x2f
+
+#define FIFO_FTH						7u
+#define FIFO_OVRN						6u
+#define FIFO_FSS5						5u
+#define FIFO_FSS4						4u
+#define FIFO_FSS3						3u
+#define FIFO_FSS2						2u
+#define FIFO_FSS1						1u
+#define FIFO_FSS0						0u
+
+void resetImu (void);
 void EnableImu(void);
 
 void AccellerationX (void);

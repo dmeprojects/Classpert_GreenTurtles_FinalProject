@@ -30,6 +30,8 @@
 
 #include "accelerometer.h"
 
+#include "lis3dsh.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,6 +92,7 @@ ledState LedState = ROTATE;	//Set the default
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	uint16_t acceleroInitParam = 0;
 
   /* USER CODE END 1 */
 
@@ -124,7 +127,27 @@ int main(void)
 
   ConsoleInit();
 
-  EnableImu();
+  //uint16_t lowest part: data for control reg 4: controls ODR and axes enabled
+  acceleroInitParam = LIS3DSH_DATARATE_3_125 | LIS3DSH_XYZ_ENABLE;
+
+
+  //uint16_t highest part: data for control reg 5
+  //acceleroInitParam |=
+
+  LIS3DSH_Init(acceleroInitParam);
+
+  uint8_t accId = LIS3DSH_ReadID();
+
+  if (accId == I_AM_LIS3DSH)
+  {
+	  LedState = POLICE;
+  }
+
+
+
+  //EnableImu();
+
+
 
   /* USER CODE END 2 */
 
@@ -299,8 +322,8 @@ static void MX_SPI1_Init(void)
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
-  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
   hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
