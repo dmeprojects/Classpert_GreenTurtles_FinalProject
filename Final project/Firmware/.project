@@ -29,4 +29,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Application/ssd1306</name>
+			<type>2</type>
+			<location>D:/Github/Classpert_GreenTurtles/stm32-ssd1306/ssd1306</location>
+		</link>
+	</linkedResources>
 </projectDescription>
