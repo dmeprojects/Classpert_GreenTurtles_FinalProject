@@ -32,6 +32,8 @@
 
 #include "lis3dsh.h"
 
+#include "ssd1306.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,6 +97,8 @@ int main(void)
 	uint16_t acceleroInitParam = 0;
 	int16_t xyzAccelleration[3] = {0};
 
+	uint8_t displayData[2] ={0};
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -144,9 +148,14 @@ int main(void)
 	  LedState = POLICE;
   }
 
-
-
   //EnableImu();
+
+  //Init display
+  ssd1306_Init();
+  ssd1306_Fill(White);
+
+  ssd1306_WriteString("Hello World", Font_7x10, 0x01 );
+  ssd1306_UpdateScreen();
 
 
 

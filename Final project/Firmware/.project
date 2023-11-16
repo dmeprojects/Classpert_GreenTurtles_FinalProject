@@ -31,9 +31,15 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Application/ssd1306</name>
+			<name>ssd1306</name>
 			<type>2</type>
-			<location>D:/Github/Classpert_GreenTurtles/stm32-ssd1306/ssd1306</location>
+			<locationURI>PROJECT_ROOT/stm32-ssd1306/ssd1306</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>PROJECT_ROOT</name>
+			<value>file:/D:/Github/Classpert_GreenTurtles</value>
+		</variable>
+	</variableList>
 </projectDescription>
