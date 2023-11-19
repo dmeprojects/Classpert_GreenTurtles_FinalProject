@@ -98,6 +98,7 @@ int main(void)
 	int16_t xyzAccelleration[3] = {0};
 
 	uint8_t displayData[2] ={0};
+	uint8_t i;
 
   /* USER CODE END 1 */
 
@@ -149,6 +150,10 @@ int main(void)
   }
 
   //EnableImu();
+  for (i = 1; i < 255; i++)
+  {
+	  HAL_I2C_Master_Receive(&hi2c1, i, 0x00, 0, HAL_MAX_DELAY);
+  }
 
   //Init display
   ssd1306_Init();
