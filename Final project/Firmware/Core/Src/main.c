@@ -32,8 +32,7 @@
 
 #include "lis3dsh.h"
 
-#include "ssd1306.h"
-
+#include "displayFunctions.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -156,10 +155,11 @@ int main(void)
   ssd1306_Init();
   ssd1306_Fill(Black);
 
-  /*Write title block*/
-  ssd1306_SetCursor(7, 0);
-  ssd1306_WriteString("Aim-A-Lyzer", Font_11x18, 0x01 );
-  ssd1306_Line(0,17,128,17, 0x01);
+  void DisplayPutHeader (void);
+
+  void DisplayAccelerometerValues(0,0,0);
+
+
 
   /*Write XYZ*/
   ssd1306_SetCursor(0,20);
