@@ -99,6 +99,7 @@ int main(void)
 
 	uint8_t displayData[2] ={0};
 	uint8_t i;
+	char number[4];
 
   /* USER CODE END 1 */
 
@@ -155,8 +156,34 @@ int main(void)
   ssd1306_Init();
   ssd1306_Fill(Black);
 
-  ssd1306_WriteString("Hello World", Font_7x10, 0x01 );
+  /*Write title block*/
+  ssd1306_SetCursor(7, 0);
+  ssd1306_WriteString("Aim-A-Lyzer", Font_11x18, 0x01 );
+  ssd1306_Line(0,17,128,17, 0x01);
+
+  /*Write XYZ*/
+  ssd1306_SetCursor(0,20);
+  ssd1306_WriteString("X: ", Font_7x10, White );
+
+  ssd1306_SetCursor(0,35);
+  ssd1306_WriteString("Y: ", Font_7x10, White );
+
+  ssd1306_SetCursor(0,50);
+  ssd1306_WriteString("Z: ", Font_7x10, White );
+
   ssd1306_UpdateScreen();
+
+  HAL_Delay(500);
+
+  for(i = 0; i < 64; i++)
+  {
+	  ssd1306_DrawPixel(64, i, 0x01);
+	  ssd1306_SetCursor(22,20);
+	  sprintf(number, "%d", i);
+	  ssd1306_WriteString(number, Font_7x10, White);
+	  ssd1306_UpdateScreen();
+	  HAL_Delay(100);
+  }
 
 
 
