@@ -151,41 +151,11 @@ int main(void)
 
   //EnableImu();
 
-  //Init display
-  ssd1306_Init();
-  ssd1306_Fill(Black);
-
-  void DisplayPutHeader (void);
-
-  void DisplayAccelerometerValues(0,0,0);
 
 
+  displayPutHeader();
 
-  /*Write XYZ*/
-  ssd1306_SetCursor(0,20);
-  ssd1306_WriteString("X: ", Font_7x10, White );
-
-  ssd1306_SetCursor(0,35);
-  ssd1306_WriteString("Y: ", Font_7x10, White );
-
-  ssd1306_SetCursor(0,50);
-  ssd1306_WriteString("Z: ", Font_7x10, White );
-
-  ssd1306_UpdateScreen();
-
-  HAL_Delay(500);
-
-  for(i = 0; i < 64; i++)
-  {
-	  ssd1306_DrawPixel(64, i, 0x01);
-	  ssd1306_SetCursor(22,20);
-	  sprintf(number, "%d", i);
-	  ssd1306_WriteString(number, Font_7x10, White);
-	  ssd1306_UpdateScreen();
-	  HAL_Delay(100);
-  }
-
-
+  displayAccelerometerValues(0,0,0);
 
   /* USER CODE END 2 */
 
@@ -198,6 +168,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  LIS3DSH_ReadACC(xyzAccelleration);
+
+	  displayAccelerometerValues(xyzAccelleration[0], xyzAccelleration[1],xyzAccelleration[2]);
   }
   /* USER CODE END 3 */
 }

@@ -8,9 +8,10 @@
 #ifndef INC_DISPLAYFUNCTIONS_H_
 #define INC_DISPLAYFUNCTIONS_H_
 
-void DisplayPutHeader (void);
+void initDisplay(void);
+void displayPutHeader (void);
 
-void DisplayAccelerometerValues(uint8_t x, uint8_t y, uint8_t z);
+void displayAccelerometerValues(int32_t x, int32_t y, int32_t z);
 
 
 

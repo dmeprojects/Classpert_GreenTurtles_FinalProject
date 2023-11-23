@@ -4,6 +4,7 @@
  *  Created on: Nov 23, 2023
  *      Author: nick_
  */
+#include "ssd1306.h"
 
 #define FIRSTLINE	25
 #define LINESPACE	12
@@ -13,7 +14,13 @@
 static lCurrentLine = FIRSTLINE;
 
 
-
+void initDisplay (void)
+{
+	  //Init display
+	  ssd1306_Init();
+	  ssd1306_Fill(Black);
+	  ssd1306_UpdateScreen();
+}
 
 void displayPutHeader (void)
 {
@@ -24,34 +31,30 @@ void displayPutHeader (void)
 	  ssd1306_UpdateScreen();
 }
 
-void DisplayAccelerometerValues(int32_t x, int32_t y, int32_t z)
+void displayAccelerometerValues(int32_t x, int32_t y, int32_t z)
 {
-	char xString[6];
-	char yString[6];
-	char zString[6];
-
 	char StringToDisplay[128];
-
 	uint8_t CurrentLine = FIRSTLINE;
 
 	//Write X:
-	sprintf(StringToDisplay, "X: %i", x);
+	sprintf(StringToDisplay, "X: %li      ", x);
 	ssd1306_SetCursor(0, CurrentLine);
 	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
 	CurrentLine += LINESPACE;
 
 	//Write Y:
-	sprintf(StringToDisplay, "Y: %i", y);
+	sprintf(StringToDisplay, "Y: %li      ", y);
 	ssd1306_SetCursor(0, CurrentLine);
 	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
 	CurrentLine += LINESPACE;
 
 	//Write Z:
-	sprintf(StringToDisplay, "Y: %i", z);
+	sprintf(StringToDisplay, "Z: %li      ", z);
 	ssd1306_SetCursor(0, CurrentLine);
 	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
-	CurrentLine += LINESPACE;
 
 
+	//Update screen
+	ssd1306_UpdateScreen();
 }
 
