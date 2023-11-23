@@ -150,14 +150,10 @@ int main(void)
   }
 
   //EnableImu();
-  for (i = 1; i < 255; i++)
-  {
-	  HAL_I2C_Master_Receive(&hi2c1, i, 0x00, 0, HAL_MAX_DELAY);
-  }
 
   //Init display
   ssd1306_Init();
-  ssd1306_Fill(White);
+  ssd1306_Fill(Black);
 
   ssd1306_WriteString("Hello World", Font_7x10, 0x01 );
   ssd1306_UpdateScreen();
