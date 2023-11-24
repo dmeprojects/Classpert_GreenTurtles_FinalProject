@@ -5,6 +5,7 @@
  *      Author: nick_
  */
 #include "ssd1306.h"
+#include "stdio.h"
 
 #define FIRSTLINE	25
 #define LINESPACE	12

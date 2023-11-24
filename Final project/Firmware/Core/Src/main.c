@@ -151,7 +151,7 @@ int main(void)
 
   //EnableImu();
 
-
+  initDisplay();
 
   displayPutHeader();
 
