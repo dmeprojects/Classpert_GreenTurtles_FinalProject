@@ -16,10 +16,18 @@
 
 #include "usbCom.h"
 #include "console.h"
+#include "displayFunctions.h"
 
 extern ledState LedState;
 
 struct usbCommunication usbCom;
+
+void startUp (void)
+{
+	  initDisplay();
+	  displayPutHeader();
+	  displayAccelerometerValues(0,0,0);
+}
 
 void mainApp (void)
 {

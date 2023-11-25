@@ -82,7 +82,7 @@ void EnableImu(void)
 
 
 	//Read out the who am i register to verify correct operation
-	transmitData[0] = 0b10000000 | WHO_AM_I;
+	transmitData[0] = 0b10000000 | WHO_AM_I_2;
 
 	HAL_GPIO_WritePin(GPIOE, CS_I2C_SPI_Pin, GPIO_PIN_RESET);
 

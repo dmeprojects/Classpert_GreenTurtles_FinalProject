@@ -12,7 +12,7 @@
 
 
 /*Registers*/
-#define WHO_AM_I						0x0f
+#define WHO_AM_I_2						0x0f
 
 #define	CTRL_REG1						0x20	//0000 0111 default
 
