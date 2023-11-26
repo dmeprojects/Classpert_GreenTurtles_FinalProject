@@ -34,7 +34,7 @@
 
 #include "displayFunctions.h"
 
-#include "MPU9250.h"
+#include "mpu6050.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,7 +65,7 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-MPU9250_t MPU9250;
+MPU6050_t mpu6050;
 
 /* USER CODE END PV */
 
@@ -101,13 +101,6 @@ int main(void)
 	uint8_t displayData[2] ={0};
 	uint8_t i;
 	char number[4];
-
-	MPU9250.settings.gFullScaleRange = GFSR_500DPS;
-	MPU9250.settings.aFullScaleRange = AFSR_4G;
-	MPU9250.settings.CS_PIN = GPIO_PIN_4;
-	MPU9250.settings.CS_PORT = GPIOC;
-	MPU9250.attitude.tau = 0.98;
-	MPU9250.attitude.dt = 0.004;
 
 
   /* USER CODE END 1 */
@@ -162,11 +155,10 @@ int main(void)
   //EnableImu();
   startUp();
 
-  if (MPU_begin(&hspi1, &MPU9250) != 1)
-  {
-	  while(1);
-  }
-  MPU_calibrateGyro(&hspi1, &MPU9250, 1500);
+  MPU6050_Init(&hi2c3);
+
+  MPU6050_Read_All(&hi2c3, &mpu6050);
+
 
 
 
@@ -182,9 +174,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  LIS3DSH_ReadACC(xyzAccelleration);
+	  //LIS3DSH_ReadACC(xyzAccelleration);
+	  MPU6050_Read_All(&hi2c3, &mpu6050);
 
-	  displayAccelerometerValues(xyzAccelleration[0], xyzAccelleration[1],xyzAccelleration[2]);
+	  displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
   }
   /* USER CODE END 3 */
 }
