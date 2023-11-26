@@ -35,6 +35,12 @@ void mainApp (void)
 	static unsigned char previousLedState = ROTATE;
 	unsigned char i;
 
+	static uint32_t lFunctionStaticVariable = 6;
+
+	uint32_t lFunctionVariable;
+
+	lFunctionVariable = lFunctionStaticVariable;
+	lFunctionVariable++;
 	//ConsoleProcess();
 
 	  if( LedState != previousLedState)

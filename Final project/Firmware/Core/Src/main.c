@@ -86,6 +86,13 @@ static void MX_I2C3_Init(void);
 /* USER CODE BEGIN 0 */
 ledState LedState = ROTATE;	//Set the default
 
+static uint32_t gStaticVariable = 123;
+
+uint32_t gGlobalVariableInit = 999;
+uint32_t gGlobalVariableNonInit;
+
+uint8_t gGlobalSmallVariableInit = 9;
+
 /* USER CODE END 0 */
 
 /**
@@ -109,6 +116,14 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
+  gGlobalVariableInit ++;
+
+  gGlobalVariableNonInit = gStaticVariable;
+
+  gGlobalVariableNonInit++;
+
+  gGlobalSmallVariableInit++;
 
   /* USER CODE BEGIN Init */
 
