@@ -12,6 +12,7 @@ void initDisplay(void);
 void displayPutHeader (void);
 
 void displayAccelerometerValues(int32_t x, int32_t y, int32_t z);
+void displayGyroValues (int32_t gX, int32_t Gy, int32_t gZ);
 
 
 

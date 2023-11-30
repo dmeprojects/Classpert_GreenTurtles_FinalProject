@@ -193,6 +193,7 @@ int main(void)
 	  MPU6050_Read_All(&hi2c3, &mpu6050);
 
 	  displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
+	  displayGyroValues (mpu6050.Gyro_X_RAW , mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
   }
   /* USER CODE END 3 */
 }

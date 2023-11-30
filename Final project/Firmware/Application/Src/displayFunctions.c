@@ -35,25 +35,51 @@ void displayPutHeader (void)
 void displayAccelerometerValues(int32_t x, int32_t y, int32_t z)
 {
 	char StringToDisplay[128];
-	uint8_t CurrentLine = FIRSTLINE;
+	uint8_t currentLine = FIRSTLINE;
 
 	//Write X:
-	sprintf(StringToDisplay, "X: %li      ", x);
-	ssd1306_SetCursor(0, CurrentLine);
+	sprintf(StringToDisplay, "X: %li     ", x);
+	ssd1306_SetCursor(0, currentLine);
 	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
-	CurrentLine += LINESPACE;
+	currentLine += LINESPACE;
 
 	//Write Y:
-	sprintf(StringToDisplay, "Y: %li      ", y);
-	ssd1306_SetCursor(0, CurrentLine);
+	sprintf(StringToDisplay, "Y: %li    ", y);
+	ssd1306_SetCursor(0, currentLine);
 	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
-	CurrentLine += LINESPACE;
+	currentLine += LINESPACE;
 
 	//Write Z:
-	sprintf(StringToDisplay, "Z: %li      ", z);
-	ssd1306_SetCursor(0, CurrentLine);
+	sprintf(StringToDisplay, "Z: %li     ", z);
+	ssd1306_SetCursor(0, currentLine);
 	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
 
+
+	//Update screen
+	ssd1306_UpdateScreen();
+}
+
+void displayGyroValues (int32_t gX, int32_t gY, int32_t gZ)
+{
+	char StringToDisplay[128];
+	uint8_t currentLine = FIRSTLINE;
+
+	//Write X:
+	sprintf(StringToDisplay, "gX: %li      ", gX);
+	ssd1306_SetCursor(60, currentLine);
+	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
+	currentLine += LINESPACE;
+
+	//Write Y:
+	sprintf(StringToDisplay, "gY: %li      ", gY);
+	ssd1306_SetCursor(60, currentLine);
+	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
+	currentLine += LINESPACE;
+
+	//Write Z:
+	sprintf(StringToDisplay, "gZ: %li      ", gZ);
+	ssd1306_SetCursor(60, currentLine);
+	ssd1306_WriteString(StringToDisplay, SMALLFONT, White);
 
 	//Update screen
 	ssd1306_UpdateScreen();
