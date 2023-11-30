@@ -109,6 +109,9 @@ int main(void)
 	uint8_t i;
 	char number[4];
 
+	char usbString[200];
+	int32_t usbStringLength = 0;
+
 
   /* USER CODE END 1 */
 
@@ -192,8 +195,18 @@ int main(void)
 	  //LIS3DSH_ReadACC(xyzAccelleration);
 	  MPU6050_Read_All(&hi2c3, &mpu6050);
 
-	  displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
-	  displayGyroValues (mpu6050.Gyro_X_RAW , mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
+	  //displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
+	  //displayGyroValues (mpu6050.Gyro_X_RAW , mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
+
+	  displayRawValues(mpu6050.Accel_X_RAW, mpu6050.Gyro_X_RAW,  mpu6050.Accel_Y_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Accel_Z_RAW, mpu6050.Gyro_Z_RAW);
+
+	  //Parse raw values to string
+	  usbStringLength = sprintf(&usbString, "aX=%li,aY=%li,aZ=%li,gX=%li,gY=%li,gZ=%li\r", mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW,mpu6050.Gyro_X_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
+
+	  CDC_Transmit_FS(usbString, usbStringLength);
+
+	  //transmit to UART
+
   }
   /* USER CODE END 3 */
 }
