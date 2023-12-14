@@ -46,21 +46,27 @@ def update_version_header(file_path):
 
     # Load old version information
     old_version_info = load_version_info()
+    
+    # Check if minor version is incremented
+    if current_minor_version != old_version_info["minor"]:
+        new_build_number = 0
+    else:
+        new_minor_version = old_version_info["minor"]
 
     # Check if major version is incremented
     if current_major_version != old_version_info["major"]:
         # Major version is incremented, reset build and minor version to 0
         new_build_number = 0
-        new_minor_version = 0
+        new_minor_version = 0               
     else:
         # Increment build number and minor version
         new_build_number = current_build + 1
-        new_minor_version = current_minor_version + 1
-
+    
     # Update the content with the new build number and minor version
     new_content = re.sub(r'#define FIRMWARE_BUILD (\d+)', f'#define FIRMWARE_BUILD {new_build_number}', content)
     new_content = re.sub(r'#define FIRMWARE_MINOR (\d+)', f'#define FIRMWARE_MINOR {new_minor_version}', new_content)
-
+    
+    
     # Write the updated content back to the version.h file
     with open(file_path, 'w') as file:
         file.write(new_content)
