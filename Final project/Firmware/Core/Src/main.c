@@ -28,10 +28,6 @@
 
 #include "console.h"
 
-#include "accelerometer.h"
-
-#include "lis3dsh.h"
-
 #include "displayFunctions.h"
 
 #include "mpu6050.h"
