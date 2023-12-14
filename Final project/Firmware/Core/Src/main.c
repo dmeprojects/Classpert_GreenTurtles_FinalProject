@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "custom_pindefines.h"
 #include "state_defines.h"
+#include "version.h"
 #include "app.h"
 
 #include "console.h"
@@ -31,10 +32,13 @@
 #include "displayFunctions.h"
 
 #include "mpu6050.h"
+#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+const char xCompileDate[] = __DATE__;
+const char xCompileTime[] = __TIME__;
 
 /* USER CODE END PTD */
 
@@ -51,13 +55,9 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c3;
-
 RNG_HandleTypeDef hrng;
-
 SPI_HandleTypeDef hspi1;
-
 TIM_HandleTypeDef htim2;
-
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -146,35 +146,17 @@ int main(void)
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(1000);
+  HAL_Delay(3000);
+
+  /*Print Firmware version*/
+  usbStringLength = sprintf(usbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
+  CDC_Transmit_FS(usbString, usbStringLength);
 
   ConsoleInit();
 
-  //uint16_t lowest part: data for control reg 4: controls ODR and axes enabled
-  acceleroInitParam = LIS3DSH_DATARATE_3_125 | LIS3DSH_XYZ_ENABLE;
-
-
-  //uint16_t highest part: data for control reg 5
-  //acceleroInitParam |=
-
-  LIS3DSH_Init(acceleroInitParam);
-
-  uint8_t accId = LIS3DSH_ReadID();
-
-  if (accId == I_AM_LIS3DSH)
-  {
-	  LedState = POLICE;
-  }
-
-  //EnableImu();
   startUp();
 
   MPU6050_Init(&hi2c3);
-
-  MPU6050_Read_All(&hi2c3, &mpu6050);
-
-
-
 
 
 
