@@ -98,15 +98,9 @@ uint8_t gGlobalSmallVariableInit = 9;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	uint16_t acceleroInitParam = 0;
-	int16_t xyzAccelleration[3] = {0};
-
-	uint8_t displayData[2] ={0};
-	uint8_t i;
-	char number[4];
-
-	char usbString[200];
+	unsigned char usbString[200];
 	int32_t usbStringLength = 0;
+	unsigned char * pUsbString = usbString;
 
 
   /* USER CODE END 1 */
@@ -149,8 +143,8 @@ int main(void)
   HAL_Delay(3000);
 
   /*Print Firmware version*/
-  usbStringLength = sprintf(usbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
-  CDC_Transmit_FS(usbString, usbStringLength);
+  usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
+  CDC_Transmit_FS(pUsbString, usbStringLength);
 
   ConsoleInit();
 
@@ -170,20 +164,16 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //LIS3DSH_ReadACC(xyzAccelleration);
 	  MPU6050_Read_All(&hi2c3, &mpu6050);
 
 	  //displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
 	  //displayGyroValues (mpu6050.Gyro_X_RAW , mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
-
 	  //displayRawValues(mpu6050.Accel_X_RAW, mpu6050.Gyro_X_RAW,  mpu6050.Accel_Y_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Accel_Z_RAW, mpu6050.Gyro_Z_RAW);
 
 	  //Parse raw values to string
 	  usbStringLength = sprintf(&usbString, "aX=%li,aY=%li,aZ=%li,gX=%li,gY=%li,gZ=%li\r\n", mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW,mpu6050.Gyro_X_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
 
 	  CDC_Transmit_FS(usbString, usbStringLength);
-
-	  //transmit to UART
 
   }
   /* USER CODE END 3 */
