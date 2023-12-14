@@ -1,7 +1,18 @@
+import os
 import re
 import json
 
-VERSION_INFO_FILE = "version_info.json"
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
+VERSION_HEADER_DIR = os.path.join(PROJECT_DIR, "Final project", "Firmware", "Application", "Inc")
+VERSION_INFO_FILE = os.path.join(SCRIPT_DIR, "version_info.json")
+
+#Remove the script 
+
+
+print(VERSION_HEADER_DIR)
+print (VERSION_INFO_FILE)
 
 def load_version_info():
     try:
@@ -79,5 +90,5 @@ def update_version_header(file_path):
     save_version_info(new_version_info)
 
 if __name__ == "__main__":
-    version_header_path = "version.h"
+    version_header_path = os.path.join(VERSION_HEADER_DIR,"version.h")
     update_version_header(version_header_path)
