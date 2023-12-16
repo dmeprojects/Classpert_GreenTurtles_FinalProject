@@ -8,6 +8,15 @@
 #ifndef INC_STATE_DEFINES_H_
 #define INC_STATE_DEFINES_H_
 
+typedef enum deviceStates
+{
+		BOOT = 0,
+		IDLE,
+		INIT_MEASUREMENTS,
+		SAMPLE_DATA,
+		STORE_DATA
+};
+
 typedef enum
 {
 	ROTATE,

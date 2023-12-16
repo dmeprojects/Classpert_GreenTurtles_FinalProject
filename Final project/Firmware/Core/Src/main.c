@@ -76,6 +76,8 @@ static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
 /* USER CODE BEGIN PFP */
 
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -145,6 +147,7 @@ int main(void)
   /*Print Firmware version*/
   usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
   CDC_Transmit_FS(pUsbString, usbStringLength);
+  printf((char *)pUsbString);
 
   ConsoleInit();
 
@@ -171,9 +174,10 @@ int main(void)
 	  //displayRawValues(mpu6050.Accel_X_RAW, mpu6050.Gyro_X_RAW,  mpu6050.Accel_Y_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Accel_Z_RAW, mpu6050.Gyro_Z_RAW);
 
 	  //Parse raw values to string
-	  usbStringLength = sprintf(&usbString, "aX=%li,aY=%li,aZ=%li,gX=%li,gY=%li,gZ=%li\r\n", mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW,mpu6050.Gyro_X_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
+	  usbStringLength = sprintf((char*)pUsbString, "T=%f,aX=%i,aY=%i,aZ=%i,gX=%i,gY=%i,gZ=%i\r\n",mpu6050.Temperature, mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW,mpu6050.Gyro_X_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
 
-	  CDC_Transmit_FS(usbString, usbStringLength);
+	  CDC_Transmit_FS(pUsbString, usbStringLength);
+	  //printf((char*)pUsbString);
 
   }
   /* USER CODE END 3 */
@@ -588,6 +592,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	}
 	*/
+}
+
+PUTCHAR_PROTOTYPE
+{
+	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
 }
 
 /* USER CODE END 4 */

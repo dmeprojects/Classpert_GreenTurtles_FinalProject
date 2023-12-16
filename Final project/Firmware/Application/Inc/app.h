@@ -9,7 +9,6 @@
 #define APP_H_
 
 void startUp (void);
-
 void mainApp (void);
 
 
