@@ -82,14 +82,6 @@ static void MX_I2C3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-ledState LedState = ROTATE;	//Set the default
-
-static uint32_t gStaticVariable = 123;
-
-uint32_t gGlobalVariableInit = 999;
-uint32_t gGlobalVariableNonInit;
-
-uint8_t gGlobalSmallVariableInit = 9;
 
 /* USER CODE END 0 */
 
@@ -111,15 +103,6 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  gGlobalVariableInit ++;
-
-  gGlobalVariableNonInit = gStaticVariable;
-
-  gGlobalVariableNonInit++;
-
-  gGlobalSmallVariableInit++;
-
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -570,18 +553,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == BUTTON1)
-  {
-    LedState++;
-    if (LedState >= MAXFUNCTIONS)
-    {
-    	LedState = ROTATE;
-    }
-  }
-  else
-  {
-      __NOP();
-  }
+	__NOP();
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -597,6 +569,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 PUTCHAR_PROTOTYPE
 {
 	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
+	return 0;
 }
 
 /* USER CODE END 4 */

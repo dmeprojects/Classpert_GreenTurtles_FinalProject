@@ -18,8 +18,6 @@
 #include "console.h"
 #include "displayFunctions.h"
 
-extern ledState LedState;
-
 struct usbCommunication usbCom;
 
 void startUp (void)
