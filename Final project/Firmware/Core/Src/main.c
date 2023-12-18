@@ -55,9 +55,13 @@ const char xCompileTime[] = __TIME__;
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c3;
+
 RNG_HandleTypeDef hrng;
+
 SPI_HandleTypeDef hspi1;
+
 TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -103,6 +107,7 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -157,7 +162,7 @@ int main(void)
 	  //displayRawValues(mpu6050.Accel_X_RAW, mpu6050.Gyro_X_RAW,  mpu6050.Accel_Y_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Accel_Z_RAW, mpu6050.Gyro_Z_RAW);
 
 	  //Parse raw values to string
-	  usbStringLength = sprintf((char*)pUsbString, "T=%f,aX=%i,aY=%i,aZ=%i,gX=%i,gY=%i,gZ=%i\r\n",mpu6050.Temperature, mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW,mpu6050.Gyro_X_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
+	  usbStringLength = sprintf((char*)pUsbString, "T=%f,aX=%i,aY=%i,aZ=%i,gX=%i,gY=%i,gZ=%i,AngleX=%f,AngleyY=%f\r\n",mpu6050.Temperature, mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW,mpu6050.Gyro_X_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW, mpu6050.KalmanAngleX,mpu6050.KalmanAngleY);
 
 	  CDC_Transmit_FS(pUsbString, usbStringLength);
 	  //printf((char*)pUsbString);
