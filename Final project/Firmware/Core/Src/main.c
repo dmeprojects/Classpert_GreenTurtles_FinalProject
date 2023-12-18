@@ -55,6 +55,7 @@ const char xCompileTime[] = __TIME__;
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c3;
+DMA_HandleTypeDef hdma_i2c3_rx;
 
 RNG_HandleTypeDef hrng;
 
@@ -72,6 +73,7 @@ MPU6050_t mpu6050;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
@@ -121,6 +123,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_I2C1_Init();
   MX_SPI1_Init();
   MX_TIM2_Init();
@@ -151,11 +154,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  uint8_t dmaData[14];
 	  mainApp();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  MPU6050_Read_All(&hi2c3, &mpu6050);
+	  //MPU6050_Read_All(&hi2c3, &mpu6050);
+
+	  /*DMA read*/
+	  HAL_I2C_Mem_Read_DMA(&hi2c3, 0xd0, 0x3b, 1, dmaData, 14);
 
 	  //displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
 	  //displayGyroValues (mpu6050.Gyro_X_RAW , mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
@@ -440,6 +447,22 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -569,6 +592,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	}
 	*/
+}
+
+void HAL_I2C_MasterRxCptlCallback(I2C_HandleTypeDef * hi2c)
+{
+	__NOP();
 }
 
 PUTCHAR_PROTOTYPE
