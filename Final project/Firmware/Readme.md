@@ -42,5 +42,13 @@ STM viewer:
 
 https://interrupt.memfault.com/blog/stm-viewer-debug
 
+Unit testing:
 
+https://interrupt.memfault.com/blog/unit-testing-basics
 
+FatFS:
+
+http://elm-chan.org/fsw/ff/00index_e.html
+
+STM32 FAT FS demo:
+https://www.youtube.com/watch?v=I9KDN1o6924
