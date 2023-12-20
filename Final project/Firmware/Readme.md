@@ -30,5 +30,17 @@ https://www.st.com/resource/en/application_note/an4031-using-the-stm32f2-stm32f4
 STM32 HAL user manual:
 https://www.st.com/resource/en/user_manual/um1725-description-of-stm32f4-hal-and-lowlayer-drivers-stmicroelectronics.pdf
 
+Embedded Artistery hard fault debugging:
+
+https://embeddedartistry.com/blog/2021/01/11/hard-fault-debugging/
+
+Asserts:
+
+https://interrupt.memfault.com/blog/asserts-in-embedded-systems
+
+STM viewer:
+
+https://interrupt.memfault.com/blog/stm-viewer-debug
+
 
 
