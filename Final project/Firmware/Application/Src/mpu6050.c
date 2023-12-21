@@ -236,3 +236,8 @@ double Kalman_getAngle(Kalman_t *Kalman, double newAngle, double newRate, double
 
     return Kalman->angle;
 };
+
+void MPU6050_DMA_Read(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct)
+{
+	__NOP();
+}

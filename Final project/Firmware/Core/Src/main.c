@@ -155,6 +155,7 @@ int main(void)
   while (1)
   {
 	  uint8_t dmaData[14];
+	  HAL_StatusTypeDef HalStatus = HAL_ERROR;
 	  mainApp();
     /* USER CODE END WHILE */
 
@@ -162,7 +163,16 @@ int main(void)
 	  //MPU6050_Read_All(&hi2c3, &mpu6050);
 
 	  /*DMA read*/
-	  HAL_I2C_Mem_Read_DMA(&hi2c3, 0xd0, 0x3b, 1, dmaData, 14);
+	  HalStatus = HAL_I2C_Mem_Read_DMA(&hi2c3, 0xd0, 0x3b, 1, dmaData, 14);
+	  //HalStatus = HAL_I2C_Mem_Read_IT(&hi2c3, 0xd0, 0x3b, 1, dmaData, 6);
+
+	  if(HalStatus!= HAL_OK)
+	  {
+		  usbStringLength = sprintf((char*)pUsbString, "HAL ERROR: %i \n\r", HalStatus);
+
+		  CDC_Transmit_FS(pUsbString, usbStringLength);
+	  }
+
 
 	  //displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
 	  //displayGyroValues (mpu6050.Gyro_X_RAW , mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
@@ -594,9 +604,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	*/
 }
 
+void HAL_DMA_Callback(DMA_HandleTypeDef * hdma)
+{
+	//Toggle orange LED
+	HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
+
+}
+
 void HAL_I2C_MasterRxCptlCallback(I2C_HandleTypeDef * hi2c)
 {
-	__NOP();
+	HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
+}
+
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
 }
 
 PUTCHAR_PROTOTYPE
