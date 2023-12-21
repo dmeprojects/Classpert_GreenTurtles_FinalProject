@@ -101,6 +101,8 @@ int main(void)
 	unsigned char usbString[200];
 	int32_t usbStringLength = 0;
 	unsigned char * pUsbString = usbString;
+	uint8_t IntPinRegister;
+	HAL_StatusTypeDef HalStatus = HAL_ERROR;
 
 
   /* USER CODE END 1 */
@@ -146,6 +148,23 @@ int main(void)
 
   MPU6050_Init(&hi2c3);
 
+  //Read Register 55 = Int pin configuration
+  HalStatus = HAL_I2C_Mem_Read_DMA(&hi2c3, 0xd0, 0x37, 1, &IntPinRegister, 1);
+
+  if(HalStatus!= HAL_OK)
+  {
+	  usbStringLength = sprintf((char*)pUsbString, "Register 55 (0x37): %i \n\r", IntPinRegister);
+
+	  CDC_Transmit_FS(pUsbString, usbStringLength);
+  }
+  else
+  {
+	  usbStringLength = sprintf((char*)pUsbString, "Failed to read register 55 (0x37) with error: %i \n\r", HalStatus);
+
+	  CDC_Transmit_FS(pUsbString, usbStringLength);
+  }
+
+
 
 
   /* USER CODE END 2 */
@@ -155,7 +174,6 @@ int main(void)
   while (1)
   {
 	  uint8_t dmaData[14];
-	  HAL_StatusTypeDef HalStatus = HAL_ERROR;
 	  mainApp();
     /* USER CODE END WHILE */
 
