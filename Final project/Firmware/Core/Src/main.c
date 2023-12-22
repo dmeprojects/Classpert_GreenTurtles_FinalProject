@@ -144,28 +144,11 @@ int main(void)
 
   ConsoleInit();
 
+  /*Boot up all perhiperhals:
+   * Display
+   * IMU
+   * RGB LED*/
   startUp();
-
-  MPU6050_Init(&hi2c3);
-
-  //Read Register 55 = Int pin configuration
-  HalStatus = HAL_I2C_Mem_Read_DMA(&hi2c3, 0xd0, 0x37, 1, &IntPinRegister, 1);
-
-  if(HalStatus!= HAL_OK)
-  {
-	  usbStringLength = sprintf((char*)pUsbString, "Register 55 (0x37): %i \n\r", IntPinRegister);
-
-	  CDC_Transmit_FS(pUsbString, usbStringLength);
-  }
-  else
-  {
-	  usbStringLength = sprintf((char*)pUsbString, "Failed to read register 55 (0x37) with error: %i \n\r", HalStatus);
-
-	  CDC_Transmit_FS(pUsbString, usbStringLength);
-  }
-
-
-
 
   /* USER CODE END 2 */
 
@@ -178,30 +161,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //MPU6050_Read_All(&hi2c3, &mpu6050);
-
-	  /*DMA read*/
-	  HalStatus = HAL_I2C_Mem_Read_DMA(&hi2c3, 0xd0, 0x3b, 1, dmaData, 14);
-	  //HalStatus = HAL_I2C_Mem_Read_IT(&hi2c3, 0xd0, 0x3b, 1, dmaData, 6);
-
-	  if(HalStatus!= HAL_OK)
-	  {
-		  usbStringLength = sprintf((char*)pUsbString, "HAL ERROR: %i \n\r", HalStatus);
-
-		  CDC_Transmit_FS(pUsbString, usbStringLength);
-	  }
-
-
-	  //displayAccelerometerValues(mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW);
-	  //displayGyroValues (mpu6050.Gyro_X_RAW , mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW);
-	  //displayRawValues(mpu6050.Accel_X_RAW, mpu6050.Gyro_X_RAW,  mpu6050.Accel_Y_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Accel_Z_RAW, mpu6050.Gyro_Z_RAW);
-
-	  //Parse raw values to string
-	  usbStringLength = sprintf((char*)pUsbString, "T=%f,aX=%i,aY=%i,aZ=%i,gX=%i,gY=%i,gZ=%i,AngleX=%f,AngleyY=%f\r\n",mpu6050.Temperature, mpu6050.Accel_X_RAW, mpu6050.Accel_Y_RAW, mpu6050.Accel_Z_RAW,mpu6050.Gyro_X_RAW, mpu6050.Gyro_Y_RAW, mpu6050.Gyro_Z_RAW, mpu6050.KalmanAngleX,mpu6050.KalmanAngleY);
-
-	  CDC_Transmit_FS(pUsbString, usbStringLength);
-	  //printf((char*)pUsbString);
-
   }
   /* USER CODE END 3 */
 }

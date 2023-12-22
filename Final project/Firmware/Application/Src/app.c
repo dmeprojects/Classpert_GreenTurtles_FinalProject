@@ -18,13 +18,18 @@
 #include "console.h"
 #include "displayFunctions.h"
 
+#include "mpu6050.h"
+
 struct usbCommunication usbCom;
+
+extern I2C_HandleTypeDef hi2c3;
 
 void startUp (void)
 {
 	  initDisplay();
 	  displayPutHeader();
 	  displayAccelerometerValues(0,0,0);
+	  MPU6050_Init(&hi2c3);
 }
 
 void mainApp (void)
