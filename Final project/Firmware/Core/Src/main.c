@@ -16,6 +16,9 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
+
+#define LIBRARY_LOG_NAME	"main"
+#define	LIBRARY_LOG_LEVEL 	LOG_DEBUG
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usb_device.h"
@@ -33,10 +36,15 @@
 
 #include "mpu6050.h"
 #include "usbd_cdc_if.h"
+
+#include "logging_stack.h"
+#include "logging_levels.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+
 const char xCompileDate[] = __DATE__;
 const char xCompileTime[] = __TIME__;
 
@@ -135,6 +143,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   HAL_Delay(3000);
+
+  LogDebug("test");
 
   /*Print Firmware version*/
   usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);

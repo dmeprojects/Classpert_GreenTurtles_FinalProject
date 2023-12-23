@@ -52,3 +52,7 @@ http://elm-chan.org/fsw/ff/00index_e.html
 
 STM32 FAT FS demo:
 https://www.youtube.com/watch?v=I9KDN1o6924
+
+Logging:
+https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Source/Utilities/logging
+https://www.freertos.org/logging.html
