@@ -5,6 +5,6 @@
 
 #define FIRMWARE_MAJOR 0
 #define FIRMWARE_MINOR 0
-#define FIRMWARE_BUILD 73
+#define FIRMWARE_BUILD 75
 
 #endif // VERSION_H

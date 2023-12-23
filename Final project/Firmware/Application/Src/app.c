@@ -24,6 +24,8 @@ struct usbCommunication usbCom;
 
 extern I2C_HandleTypeDef hi2c3;
 
+extern deviceStates_t deviceStates;
+
 void startUp (void)
 {
 	  initDisplay();
@@ -35,4 +37,31 @@ void startUp (void)
 void mainApp (void)
 {
 	  ConsoleProcess();
+
+	  switch (deviceStates)
+	  {
+	  case BOOT:
+
+		  break;
+
+	  case IDLE:
+
+		  break;
+
+	  case INIT_MEASUREMENTS:
+
+		  break;
+
+	  case SAMPLE_DATA:
+
+		  break;
+
+	  case STORE_DATA:
+
+		  break;
+
+	  default:
+
+		  break;
+	  }
 }

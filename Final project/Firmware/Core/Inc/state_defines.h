@@ -15,7 +15,7 @@ typedef enum
 		INIT_MEASUREMENTS,
 		SAMPLE_DATA,
 		STORE_DATA
-} deviceStates;
+} deviceStates_t;
 
 
 

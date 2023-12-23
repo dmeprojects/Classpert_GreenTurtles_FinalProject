@@ -66,6 +66,7 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+deviceStates_t deviceStates;
 MPU6050_t mpu6050;
 
 /* USER CODE END PV */
@@ -101,8 +102,6 @@ int main(void)
 	unsigned char usbString[200];
 	int32_t usbStringLength = 0;
 	unsigned char * pUsbString = usbString;
-	uint8_t IntPinRegister;
-	HAL_StatusTypeDef HalStatus = HAL_ERROR;
 
 
   /* USER CODE END 1 */
@@ -156,7 +155,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  uint8_t dmaData[14];
 	  mainApp();
     /* USER CODE END WHILE */
 
