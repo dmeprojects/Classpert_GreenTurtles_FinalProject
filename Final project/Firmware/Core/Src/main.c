@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 #include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -133,6 +134,7 @@ int main(void)
   MX_RNG_Init();
   MX_USART2_UART_Init();
   MX_I2C3_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_Delay(3000);
@@ -158,7 +160,6 @@ int main(void)
   {
 	  mainApp();
     /* USER CODE END WHILE */
-	  //MPU6050_Read_All(&hi2c3, &mpu6050);
 
     /* USER CODE BEGIN 3 */
   }
@@ -475,6 +476,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, OTG_FS_PowerSwitchOn_Pin|MPU9250_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SD_CC_GPIO_Port, SD_CC_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
                           |Audio_RST_Pin, GPIO_PIN_RESET);
 
@@ -506,13 +510,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : I2S3_WS_Pin */
-  GPIO_InitStruct.Pin = I2S3_WS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  /*Configure GPIO pin : SD_CC_Pin */
+  GPIO_InitStruct.Pin = SD_CC_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
-  HAL_GPIO_Init(I2S3_WS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(SD_CC_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BOOT1_Pin */
   GPIO_InitStruct.Pin = BOOT1_Pin;
