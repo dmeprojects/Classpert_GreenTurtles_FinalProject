@@ -158,7 +158,7 @@ int main(void)
   {
 	  mainApp();
     /* USER CODE END WHILE */
-	  MPU6050_DMA_Read(&hi2c3, mpu6050);
+	  MPU6050_Read_All(&hi2c3, &mpu6050);
 
     /* USER CODE BEGIN 3 */
   }
