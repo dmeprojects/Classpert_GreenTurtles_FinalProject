@@ -38,7 +38,7 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"int", ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
     {"u16h", ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
 
-	{"read_imu", ConsoleCommandReadImu, HELP("Reads the accelerometer, gyro and temperature from the imu")},
+	{"readImu", ConsoleCommandReadImu, HELP("Reads the accelerometer, gyro and temperature from the imu")},
 
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
@@ -124,7 +124,7 @@ static eCommandResult_T ConsoleCommandReadImu(void)
 {
 	MPU6050_t imuData;
 	eCommandResult_T result = COMMAND_SUCCESS;
-	uint8_t string[300];
+	char string[300];
 	int16_t stringLength;
 
 
