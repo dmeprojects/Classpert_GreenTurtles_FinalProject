@@ -102,6 +102,7 @@ int main(void)
 	unsigned char usbString[200];
 	int32_t usbStringLength = 0;
 	unsigned char * pUsbString = usbString;
+	MPU6050_t mpu6050;
 
 
   /* USER CODE END 1 */
@@ -157,6 +158,7 @@ int main(void)
   {
 	  mainApp();
     /* USER CODE END WHILE */
+	  MPU6050_DMA_Read(&hi2c3, mpu6050);
 
     /* USER CODE BEGIN 3 */
   }
