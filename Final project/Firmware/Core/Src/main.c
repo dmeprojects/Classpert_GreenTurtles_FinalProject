@@ -146,6 +146,8 @@ int main(void)
   MX_SDIO_SD_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_GPIO_WritePin(SD_CC_GPIO_Port, SD_CC_Pin, 1);
+
   HAL_Delay(3000);
 
   /*Print Firmware version*/
@@ -162,6 +164,8 @@ int main(void)
   startUp();
 
   /*SD card test*/
+
+  HAL_GPIO_WritePin(SD_CC_GPIO_Port, SD_CC_Pin, 0);
   if(f_mount(&SDFatFS, (TCHAR const *)SDPath, 0) != FR_OK)
   {
 	  Error_Handler();
@@ -172,7 +176,7 @@ int main(void)
 	  printf(freeSpace);
 
 	  res = f_open(&SDFile, "STM32TEST.txt", FA_CREATE_ALWAYS | FA_WRITE);
-	  if(res != FR_OK)
+           	  if(res != FR_OK)
 	  {
 		  Error_Handler();
 	  }
