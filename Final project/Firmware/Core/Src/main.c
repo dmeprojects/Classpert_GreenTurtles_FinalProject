@@ -60,7 +60,7 @@ DMA_HandleTypeDef hdma_i2c3_rx;
 
 RNG_HandleTypeDef hrng;
 
-SPI_HandleTypeDef hspi1;
+SD_HandleTypeDef hsd;
 
 TIM_HandleTypeDef htim2;
 
@@ -77,11 +77,11 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_RNG_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
+static void MX_SDIO_SD_Init(void);
 /* USER CODE BEGIN PFP */
 
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -106,6 +106,15 @@ int main(void)
 	MPU6050_t mpu6050;
 
 
+	/*SD card test variables*/
+	FRESULT res;
+	FATFS *fs;
+	uint32_t byteswritten, bytesread;
+	uint8_t sdWriteString[] = "SD card test";
+	uint8_t sdReadString[_MAX_SS];
+	DWORD freeSpace;
+
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -128,13 +137,13 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_I2C1_Init();
-  MX_SPI1_Init();
   MX_TIM2_Init();
   MX_USB_DEVICE_Init();
   MX_RNG_Init();
   MX_USART2_UART_Init();
   MX_I2C3_Init();
   MX_FATFS_Init();
+  MX_SDIO_SD_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_Delay(3000);
@@ -151,6 +160,44 @@ int main(void)
    * IMU
    * RGB LED*/
   startUp();
+
+  /*SD card test*/
+  if(f_mount(&SDFatFS, (TCHAR const *)SDPath, 0) != FR_OK)
+  {
+	  Error_Handler();
+  }
+  else
+  {
+	  res = f_getfree("0:", &freeSpace, fs);
+	  printf(freeSpace);
+
+	  res = f_open(&SDFile, "STM32TEST.txt", FA_CREATE_ALWAYS | FA_WRITE);
+	  if(res != FR_OK)
+	  {
+		  Error_Handler();
+	  }
+	  else
+	  {
+		  res = f_write(&SDFile, sdWriteString, strlen((char *)sdWriteString), (void *)&byteswritten);
+		  if (byteswritten == 0)
+		  {
+			  Error_Handler();
+		  }
+		  else
+		  {
+			  f_close(&SDFile);
+
+			  //f_open(&SDFile, "STM32TEST.txt", FA_READ);
+		  }
+	  }
+  }
+  f_mount(&SDFatFS, (TCHAR const *) NULL, 0);
+
+
+
+
+
+
 
   /* USER CODE END 2 */
 
@@ -306,40 +353,30 @@ static void MX_RNG_Init(void)
 }
 
 /**
-  * @brief SPI1 Initialization Function
+  * @brief SDIO Initialization Function
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void)
+static void MX_SDIO_SD_Init(void)
 {
 
-  /* USER CODE BEGIN SPI1_Init 0 */
+  /* USER CODE BEGIN SDIO_Init 0 */
 
-  /* USER CODE END SPI1_Init 0 */
+  /* USER CODE END SDIO_Init 0 */
 
-  /* USER CODE BEGIN SPI1_Init 1 */
+  /* USER CODE BEGIN SDIO_Init 1 */
 
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI1_Init 2 */
+  /* USER CODE END SDIO_Init 1 */
+  hsd.Instance = SDIO;
+  hsd.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;
+  hsd.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;
+  hsd.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
+  hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
+  hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
+  hsd.Init.ClockDiv = 255;
+  /* USER CODE BEGIN SDIO_Init 2 */
 
-  /* USER CODE END SPI1_Init 2 */
+  /* USER CODE END SDIO_Init 2 */
 
 }
 
@@ -496,14 +533,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PDM_OUT_Pin */
-  GPIO_InitStruct.Pin = PDM_OUT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-  HAL_GPIO_Init(PDM_OUT_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
@@ -517,19 +546,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SD_CC_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : SD_DETECT_Pin IMU_INT_Pin */
+  GPIO_InitStruct.Pin = SD_DETECT_Pin|IMU_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
   /*Configure GPIO pin : BOOT1_Pin */
   GPIO_InitStruct.Pin = BOOT1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : CLK_IN_Pin */
-  GPIO_InitStruct.Pin = CLK_IN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-  HAL_GPIO_Init(CLK_IN_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LD4_Pin LD3_Pin LD5_Pin LD6_Pin
                            Audio_RST_Pin */
@@ -539,14 +566,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : I2S3_MCK_Pin I2S3_SCK_Pin I2S3_SD_Pin */
-  GPIO_InitStruct.Pin = I2S3_MCK_Pin|I2S3_SCK_Pin|I2S3_SD_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : OTG_FS_OverCurrent_Pin */
   GPIO_InitStruct.Pin = OTG_FS_OverCurrent_Pin;
