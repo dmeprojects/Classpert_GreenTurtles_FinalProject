@@ -35,7 +35,7 @@
 #include "mpu6050.h"
 #include "usbd_cdc_if.h"
 
-#include "fatfs_sd.h"
+#include "fatfs.h"
 #include "string.h"
 /* USER CODE END Includes */
 
@@ -163,7 +163,7 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(3000);
+  //HAL_Delay(3000);
 
   /*Print Firmware version*/
   usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
@@ -185,11 +185,19 @@ int main(void)
 	  Error_Handler();
   }
 
-  fresult = f_getfree("", &free_clust, &pfs);
+//  fresult = f_getfree("", &free_clust, &pfs);
+//
+//  total = (uint32_t)(pfs->n_fatent - 2) * (pfs->csize * 0.5);
+//
+//  free_space = (uint32_t)(free_clust * pfs->csize * 0.5);
 
-  total = (uint32_t)(pfs->n_fatent - 2) * (pfs->csize * 0.5);
+  //Write file
+  fresult = f_open(&fil, "STM32_TEST.txt", FA_CREATE_NEW | FA_WRITE);
 
-  free_space = (uint32_t)(free_clust * pfs->csize * 0.5);
+  fresult = f_puts("Test line 1", &fil);
+
+  fresult = f_close(&fil);
+
 
 
 
@@ -370,7 +378,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

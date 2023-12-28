@@ -247,6 +247,7 @@ static BYTE SD_SendCmd(BYTE cmd, uint32_t arg)
 DSTATUS SD_disk_initialize(BYTE drv) 
 {
 	uint8_t n, type, ocr[4];
+	uint8_t result;
 
 	/* single drive, drv should be 0 */
 	if(drv) return STA_NOINIT;
@@ -255,7 +256,9 @@ DSTATUS SD_disk_initialize(BYTE drv)
 	if(Stat & STA_NODISK) return Stat;
 
 	/* power on */
-	SD_PowerOn();
+	SD_PowerOn();	//Sends
+
+	HAL_Delay(1);
 
 	/* slave select */
 	SELECT();
@@ -264,13 +267,15 @@ DSTATUS SD_disk_initialize(BYTE drv)
 	type = 0;
 
 	/* send GO_IDLE_STATE command */
-	if (SD_SendCmd(CMD0, 0) == 1)
+	result = SD_SendCmd(CMD0, 0);
+	if (result == 1)
 	{
 		/* timeout 1 sec */
 		Timer1 = 1000;
 
 		/* SDC V2+ accept CMD8 command, http://elm-chan.org/docs/mmc/mmc_e.html */
-		if (SD_SendCmd(CMD8, 0x1AA) == 1)
+		result = SD_SendCmd(CMD8, 0x1AA);
+		if (result == 1)
 		{
 			/* operation condition register */
 			for (n = 0; n < 4; n++)
