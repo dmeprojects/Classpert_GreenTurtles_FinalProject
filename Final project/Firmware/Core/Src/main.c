@@ -125,10 +125,11 @@ int main(void)
 	unsigned char usbString[200];
 	int32_t usbStringLength = 0;
 	unsigned char * pUsbString = usbString;
-	MPU6050_t mpu6050;
+
 
 	uint8_t rtext[_MAX_SS];/* File read buffer */
-
+	uint32_t byteswritten, bytesread; /* File write/read counts */
+	uint8_t wtext[] = "STM32 FATFS works great!"; /* File write buffer */
 
 	/*SD card test variables*/
 //	FRESULT res;
@@ -198,22 +199,30 @@ int main(void)
   {
       Error_Handler();
   }
+  else
+  {
+	  fresult = f_open(&SDFile, "STM32_TST.txt", FA_CREATE_ALWAYS | FA_WRITE);
 
-//  fresult = f_getfree("", &free_clust, &pfs);
-//
-//  total = (uint32_t)(pfs->n_fatent - 2) * (pfs->csize * 0.5);
-//
-//  free_space = (uint32_t)(free_clust * pfs->csize * 0.5);
+	  if (fresult != FR_OK)
+	  {
+		  Error_Handler();
+	  }
+	  else
+	  {
+		  fresult = f_write(&SDFile, wtext, strlen((char*)wtext), (void*)&byteswritten);
 
-  //Write file
-  fresult = f_open(&fil, "STM32_TEST.txt", FA_CREATE_NEW | FA_WRITE);
+		  if (fresult != FR_OK || byteswritten == 0)
+		  {
+			  Error_Handler();
+		  }
+		  else
+		  {
+			  f_close(&SDFile);
+		  }
+	  }
+  }
 
-  fresult = f_puts("Test line 1", &fil);
-
-  fresult = f_close(&fil);
-
-
-
+  f_mount(&SDFatFS, (TCHAR const *) NULL, 0);
 
 
   /* USER CODE END 2 */
