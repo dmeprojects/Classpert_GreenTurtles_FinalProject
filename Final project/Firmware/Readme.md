@@ -47,13 +47,18 @@ Unit testing:
 https://interrupt.memfault.com/blog/unit-testing-basics
 
 FatFS:
+http://elm-chan.org/fsw/ff/
 
-http://elm-chan.org/fsw/ff/00index_e.html
+SD card info:
+https://chlazza.nfshost.com/sdcardinfo.html
 
-STM32 FAT FS demo:
+
+FAT FS: demo:
 https://www.youtube.com/watch?v=I9KDN1o6924
 
 SD card in SPI mode:
 https://blog.domski.pl/using-fatfs-with-hal/
 https://github.com/eziya/STM32_SPI_SDCARD/tree/master
+
+STM32 SD card with SDIO:
 https://www.youtube.com/watch?v=spVIZO-jbxE

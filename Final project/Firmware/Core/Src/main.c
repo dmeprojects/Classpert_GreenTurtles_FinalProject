@@ -194,14 +194,14 @@ int main(void)
 	  Error_Handler();
   }
 
-  fresult = f_mkfs((TCHAR const*)SDPath, FM_FAT32, 0, rtext, sizeof(rtext));
-  if( fresult != FR_OK)
-  {
-      Error_Handler();
-  }
-  else
-  {
-	  fresult = f_open(&SDFile, "STM32_TST.txt", FA_CREATE_ALWAYS | FA_WRITE);
+//  fresult = f_mkfs((TCHAR const*)SDPath, FM_FAT32, 0, rtext, sizeof(rtext));	//Create a FAT volume
+//  if( fresult != FR_OK)
+//  {
+//      Error_Handler();
+//  }
+//  else
+//  {
+	  fresult = f_open(&SDFile, "STM32_TST_2.txt", FA_CREATE_ALWAYS | FA_WRITE);
 
 	  if (fresult != FR_OK)
 	  {
@@ -220,7 +220,7 @@ int main(void)
 			  f_close(&SDFile);
 		  }
 	  }
-  }
+//  }
 
   f_mount(&SDFatFS, (TCHAR const *) NULL, 0);
 
