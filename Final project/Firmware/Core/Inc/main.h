@@ -78,8 +78,6 @@ void Error_Handler(void);
 #define SD_DETECT_GPIO_Port GPIOC
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
-#define SD_CD_Pin GPIO_PIN_11
-#define SD_CD_GPIO_Port GPIOD
 #define LD4_Pin GPIO_PIN_12
 #define LD4_GPIO_Port GPIOD
 #define LD3_Pin GPIO_PIN_13
@@ -90,6 +88,8 @@ void Error_Handler(void);
 #define LD6_GPIO_Port GPIOD
 #define IMU_INT_Pin GPIO_PIN_6
 #define IMU_INT_GPIO_Port GPIOC
+#define SD_DET_Pin GPIO_PIN_7
+#define SD_DET_GPIO_Port GPIOC
 #define VBUS_FS_Pin GPIO_PIN_9
 #define VBUS_FS_GPIO_Port GPIOA
 #define OTG_FS_DM_Pin GPIO_PIN_11
