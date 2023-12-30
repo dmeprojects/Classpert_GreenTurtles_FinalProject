@@ -74,6 +74,9 @@
  * @note The default definition of this macro generates logging via a printf-like
  * vLoggingPrintf function.
  */
+
+extern void printf (const char * pcFormatString, ...);
+
 #ifndef SdkLog
     //#define SdkLog( message )    vLoggingPrintf message
 	#define SdkLog ( message ) 	printf message

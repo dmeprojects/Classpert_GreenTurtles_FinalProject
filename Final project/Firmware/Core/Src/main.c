@@ -17,8 +17,10 @@
   */
 /* USER CODE END Header */
 
-#define LIBRARY_LOG_NAME	"main"
-#define	LIBRARY_LOG_LEVEL 	LOG_DEBUG
+//#define LIBRARY_LOG_NAME	"main"
+//#define	LIBRARY_LOG_LEVEL 	LOG_DEBUG
+//#define LOGUART
+#define LOGUSB
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usb_device.h"
@@ -37,8 +39,10 @@
 #include "mpu6050.h"
 #include "usbd_cdc_if.h"
 
-#include "logging_stack.h"
-#include "logging_levels.h"
+#include "stdarg.h"
+
+//#include "logging_stack.h"
+//#include "logging_levels.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,6 +84,8 @@ MPU6050_t mpu6050;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+
+
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
@@ -89,9 +95,33 @@ static void MX_TIM2_Init(void);
 static void MX_RNG_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
+
+void printlog ( const char * pc, ... );
 /* USER CODE BEGIN PFP */
 
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+
+#define log( message ) printlog message
+
+#define LIBRARY_LOG_LEVEL	LOG_INFO
+
+#if LIBRARY_LOG_LEVEL == LOG_INFO
+#define LogError( ... )		log( ("ERROR: ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
+#define LogInfo( message )		log(("INFO: ")); log(( message )); log(("\r\n"))
+#define	LogDebug( message )		log(("DEBUG: ")); log(( message )); log(("\r\n"))
+#define	LogWarn( message )		log(("WARNING: ")); log(( message )); log(("\r\n"))
+
+#endif
+
+void printlog ( const char * pc, ...)
+{
+	va_list va;
+	va_start(va, pc);
+
+	vprintf(pc, va);
+
+	va_end(va);
+}
 
 /* USER CODE END PFP */
 
@@ -110,6 +140,8 @@ int main(void)
 	unsigned char usbString[200];
 	int32_t usbStringLength = 0;
 	unsigned char * pUsbString = usbString;
+
+	int16_t testvalue = 687;
 
 
   /* USER CODE END 1 */
@@ -144,12 +176,26 @@ int main(void)
 
   HAL_Delay(3000);
 
-  LogDebug("test");
+  //LogDebug("test");
 
   /*Print Firmware version*/
-  usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
-  CDC_Transmit_FS(pUsbString, usbStringLength);
+  //usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
+  //LogError( "Version: %s Build on: %s at %s", VERSION_STRING, xCompileDate, xCompileTime);
+
+  LogError("Aim-A-Lyzer, version: %s", VERSION_STRING);
+
+
+  //CDC_Transmit_FS(pUsbString, usbStringLength);
   printf((char *)pUsbString);
+
+  LogError("Dit is een error message");
+
+  printf("test 123\r\n\\0");
+
+  printf("TestValue: %i", testvalue);
+
+  printf((char *)pUsbString);
+
 
   ConsoleInit();
 
@@ -608,8 +654,16 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
 PUTCHAR_PROTOTYPE
 {
+
+#ifdef LOGUART
 	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
 	return 0;
+#endif
+
+#ifdef LOGUSB
+	CDC_Transmit_FS((uint8_t *)&ch, 1);
+	return 0;
+#endif
 }
 
 /* USER CODE END 4 */
