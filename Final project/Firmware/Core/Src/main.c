@@ -107,9 +107,9 @@ void printlog ( const char * pc, ... );
 
 #if LIBRARY_LOG_LEVEL == LOG_INFO
 #define LogError( ... )		log( ("ERROR: ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
-#define LogInfo( message )		log(("INFO: ")); log(( message )); log(("\r\n"))
-#define	LogDebug( message )		log(("DEBUG: ")); log(( message )); log(("\r\n"))
-#define	LogWarn( message )		log(("WARNING: ")); log(( message )); log(("\r\n"))
+#define LogInfo( ... )		log(("INFO: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	LogDebug( ... )		log(("DEBUG: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	LogWarn( ... )		log(("WARNING: ")); log( ( __VA_ARGS__ ) );; log(("\r\n"))
 
 #endif
 
@@ -141,7 +141,7 @@ int main(void)
 	int32_t usbStringLength = 0;
 	unsigned char * pUsbString = usbString;
 
-	int16_t testvalue = 687;
+	float batteryVoltage = 2.639;
 
 
   /* USER CODE END 1 */
@@ -182,19 +182,13 @@ int main(void)
   //usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
   //LogError( "Version: %s Build on: %s at %s", VERSION_STRING, xCompileDate, xCompileTime);
 
-  LogError("Aim-A-Lyzer, version: %s", VERSION_STRING);
+  LogInfo("Aim-A-Lyzer, version: %i.%i.%i", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
+  LogInfo("Build on: %s at %s", __DATE__, __TIME__);
+  LogWarn("Voltage: %f", batteryVoltage);
 
 
-  //CDC_Transmit_FS(pUsbString, usbStringLength);
-  printf((char *)pUsbString);
 
-  LogError("Dit is een error message");
 
-  printf("test 123\r\n\\0");
-
-  printf("TestValue: %i", testvalue);
-
-  printf((char *)pUsbString);
 
 
   ConsoleInit();
