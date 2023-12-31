@@ -33,6 +33,7 @@
 #include "usbd_cdc_if.h"
 #include "string.h"
 #include "stdarg.h"
+#include "terminalColorCodes.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -104,10 +105,10 @@ void printlog (const char * pc, ...);
 
 
 #if LIBRARY_LOG_LEVEL == LOG_INFO
-#define LogError( ... )		log( ("ERROR: ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
-#define LogInfo( ... )		log(("INFO: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
-#define	LogDebug( ... )		log(("DEBUG: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
-#define	LogWarn( ... )		log(("WARNING: ")); log( ( __VA_ARGS__ ) );; log(("\r\n"))
+#define LogError( ... )		log( (SERIAL_BRIGHT_RED_CHARS) ); log( ("ERROR: ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
+#define LogInfo( ... )		log( (SERIAL_BRIGHT_GREEN_CHARS) ); log(("INFO: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	LogDebug( ... )		log( (SERIAL_DEFAULT_COLORS) ); log(("DEBUG: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	LogWarn( ... )		log( (SERIAL_BRIGHT_YELLOW_CHARS) ); log(("WARNING: ")); log( ( __VA_ARGS__ ) );; log(("\r\n"))
 
 #endif
 
@@ -204,8 +205,11 @@ int main(void)
   //HAL_Delay(3000);
 
   /*Print Firmware version*/
+  LogInfo( "Classpert Green Turtels Final project");
   LogInfo("Aim-A-Lyzer, version: %i.%i.%i", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
   LogInfo("Build on: %s at %s", __DATE__, __TIME__);
+  LogInfo( "Created by Nick Meynen");
+
 
   if (HAL_GPIO_ReadPin(GPIOA, SD_CS_Pin) == 1)
   {
