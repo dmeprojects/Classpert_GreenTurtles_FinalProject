@@ -27,27 +27,31 @@
 #include "state_defines.h"
 #include "version.h"
 #include "app.h"
-
 #include "console.h"
-
 #include "displayFunctions.h"
-
 #include "mpu6050.h"
 #include "usbd_cdc_if.h"
-
-//#include "fatfs.h"
 #include "string.h"
+#include "stdarg.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-const char xCompileDate[] = __DATE__;
-const char xCompileTime[] = __TIME__;
+
+
+
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+
+#define log(message) printlog message
+
+#define LIBRARY_LOG_LEVEL	LOG_INFO
+
+#define LOGUART
 
 /* USER CODE END PD */
 
@@ -77,6 +81,9 @@ UART_HandleTypeDef huart2;
 deviceStates_t deviceStates;
 MPU6050_t mpu6050;
 
+const char xCompileDate[] = __DATE__;
+const char xCompileTime[] = __TIME__;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,9 +97,31 @@ static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SDIO_SD_Init(void);
+
+void printlog (const char * pc, ...);
 /* USER CODE BEGIN PFP */
 
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+
+
+#if LIBRARY_LOG_LEVEL == LOG_INFO
+#define LogError( ... )		log( ("ERROR: ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
+#define LogInfo( ... )		log(("INFO: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	LogDebug( ... )		log(("DEBUG: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	LogWarn( ... )		log(("WARNING: ")); log( ( __VA_ARGS__ ) );; log(("\r\n"))
+
+#endif
+
+void printlog ( const char * pc, ...)
+{
+	va_list va;
+	va_start(va, pc);
+
+	vprintf(pc, va);
+
+	va_end(va);
+}
+
+
 
 /* USER CODE END PFP */
 
@@ -175,9 +204,18 @@ int main(void)
   //HAL_Delay(3000);
 
   /*Print Firmware version*/
-  usbStringLength = sprintf((char*)pUsbString, "Version: %s Build on: %s at %s\r\n", VERSION_STRING, xCompileDate, xCompileTime);
-  CDC_Transmit_FS(pUsbString, usbStringLength);
-  printf((char *)pUsbString);
+  LogInfo("Aim-A-Lyzer, version: %i.%i.%i", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
+  LogInfo("Build on: %s at %s", __DATE__, __TIME__);
+
+  if (HAL_GPIO_ReadPin(GPIOA, SD_CS_Pin) == 1)
+  {
+	  LogInfo("SD card inserted");
+  }
+  else
+  {
+	  LogInfo("No SD card inserted");
+
+  }
 
   ConsoleInit();
 
@@ -191,6 +229,7 @@ int main(void)
   fresult = f_mount(&SDFatFS, (TCHAR const *)SDPath, 0);
   if(fresult != FR_OK)
   {
+	  LogError("Failed to init SD card with error: %d", fresult);
 	  Error_Handler();
   }
 
@@ -205,6 +244,7 @@ int main(void)
 
 	  if (fresult != FR_OK)
 	  {
+		  LogError("Failed to open file on SD card with error: %d", fresult);
 		  Error_Handler();
 	  }
 	  else
@@ -213,6 +253,7 @@ int main(void)
 
 		  if (fresult != FR_OK || byteswritten == 0)
 		  {
+			  LogError("Failed to create file on SD card with error: %d", fresult);
 			  Error_Handler();
 		  }
 		  else
@@ -699,8 +740,15 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
 PUTCHAR_PROTOTYPE
 {
+#ifdef LOGUART
 	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
 	return 0;
+#endif
+
+#ifdef LOGUSB
+	CDC_Transmit_FS((uint8_t *)&ch, 1);
+	return 0;
+#endif
 }
 
 /* USER CODE END 4 */
@@ -716,6 +764,8 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+	  HAL_GPIO_TogglePin(GPIOD, LED_RED);
+	  HAL_Delay(200);
   }
   /* USER CODE END Error_Handler_Debug */
 }
