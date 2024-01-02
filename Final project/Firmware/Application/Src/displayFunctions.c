@@ -5,7 +5,15 @@
  *      Author: nick_
  */
 #include "ssd1306.h"
+#include "string.h"
 #include "stdio.h"
+
+#include "logging.h"
+
+#define LIBRARY_LOG_NAME	"DISPLAY"
+
+#define DISPLAYSIZE_X 	128
+#define DISPLAYSIZE_Y	64
 
 #define FIRSTLINE	25
 #define LINESPACE	12
@@ -13,7 +21,7 @@
 
 #define SMALLFONT	Font_7x10
 
-static lCurrentLine = FIRSTLINE;
+//static lCurrentLine = FIRSTLINE;
 
 
 void initDisplay (void)
@@ -22,6 +30,12 @@ void initDisplay (void)
 	  ssd1306_Init();
 	  ssd1306_Fill(Black);
 	  ssd1306_UpdateScreen();
+}
+
+void displayClear (void)
+{
+	ssd1306_Fill(Black);
+	ssd1306_UpdateScreen();
 }
 
 void displayPutHeader (void)
@@ -128,5 +142,28 @@ void displayRawValues (int32_t aX, int32_t gX, int32_t aY, int32_t gY, int32_t a
 	//Update screen
 	ssd1306_UpdateScreen();
 
+}
+
+int16_t displayWriteText( uint8_t xPos, uint8_t yPos, char * textToWrite)
+{
+
+	if (strlen(textToWrite) > DISPLAYSIZE_X)
+	{
+		LogError("Text to long, text may not exeeding %d chars", DISPLAYSIZE_X);
+		return -1;
+	}
+
+	if(xPos > DISPLAYSIZE_X || yPos > DISPLAYSIZE_Y)
+	{
+		LogError("Cursor position out of display range");
+		return -1;
+	}
+
+	ssd1306_SetCursor(xPos, yPos);
+	ssd1306_WriteString(textToWrite, SMALLFONT, White);
+
+	ssd1306_UpdateScreen();
+
+	return 1;
 }
 

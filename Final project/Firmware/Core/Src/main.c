@@ -108,7 +108,8 @@ static void MX_SPI1_Init(void);
 static void MX_SDIO_SD_Init(void);
 
 /* USER CODE BEGIN PFP */
-uint8_t SdCardpresentVar = 0;
+uint8_t sdCardpresentVar = 0;
+uint8_t buttonPressed = 0;
 
 
 /* USER CODE END PFP */
@@ -162,7 +163,7 @@ int main(void)
 
   /*Print Firmware version*/
   LogInfo( "Classpert Green Turtels Final project");
-  LogInfo("Aim-A-Lyzer, version: %i.%i.%i", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
+  LogInfo("Aim-A-Lyzer, version: %d.%d.%d", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
   LogInfo("Build on: %s at %s", __DATE__, __TIME__);
   LogInfo( "Created by Nick Meynen");
 
@@ -172,6 +173,8 @@ int main(void)
    * IMU
    * RGB LED*/
   startUp();
+
+  HAL_Delay(2000);
 
   /* USER CODE END 2 */
 
@@ -631,6 +634,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(HAL_GPIO_ReadPin(GPIOA, BUTTON1) == 1)
 		{
 			HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
+			buttonPressed = 1;
 		}
 	}
 

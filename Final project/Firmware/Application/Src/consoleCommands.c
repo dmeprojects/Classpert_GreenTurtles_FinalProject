@@ -6,7 +6,8 @@
 //		    {"ver", &ConsoleCommandVer, HELP("Get the version string")},
 //		3. Implement the function, using ConsoleReceiveParam<Type> to get the parameters from the buffer.
 
-#include <string.h>
+#include "string.h"
+#include "stdio.h"
 #include "consoleCommands.h"
 #include "console.h"
 #include "consoleIo.h"
@@ -125,15 +126,11 @@ static eCommandResult_T ConsoleCommandReadImu(void)
 	MPU6050_t imuData;
 	eCommandResult_T result = COMMAND_SUCCESS;
 	char string[300];
-	int16_t stringLength;
-
-
 
 	//Read imuData
 	MPU6050_Read_All(&hi2c3, &imuData);
-
 	ConsoleIoSendString("IMU Data: ");
-	stringLength = sprintf(string, "ax: %f, ay: %f, az: %f - gx: %f, gy: %f, gz: %f - temp: %f °C", imuData.Ax, imuData.Ay, imuData.Az, imuData.Gx, imuData.Gy, imuData.Gz, imuData.Temperature);
+	sprintf(string, "ax: %f, ay: %f, az: %f - gx: %f, gy: %f, gz: %f - temp: %f °C", imuData.Ax, imuData.Ay, imuData.Az, imuData.Gx, imuData.Gy, imuData.Gz, imuData.Temperature);
 	ConsoleIoSendString(string);
 	ConsoleIoSendString(STR_ENDLINE);
 

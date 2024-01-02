@@ -4,7 +4,6 @@
  *  Created on: Oct 26, 2023
  *      Author: nick_
  */
-#define TEXT	"Test 123 ABC \r\n"
 
 #include "app.h"
 #include "main.h"
@@ -30,27 +29,29 @@ extern I2C_HandleTypeDef hi2c3;
 
 extern deviceStates_t deviceStates;
 
+extern uint8_t buttonPressed;
+
 void startUp (void)
 {
 	LogInfo("Init Display...");
-	  initDisplay();
-	  displayPutHeader();
+	initDisplay();
+	displayPutHeader();
 
-	  LogInfo("Init console ...");
-	  ConsoleInit();
+	LogInfo("Init console ...");
+	ConsoleInit();
 
-	  LogInfo ("Checking SD card ...");
-	  if( SdCardPresent() != SD_OK)
-	  {
-		  LogWarn("SD card not inserted");
-	  }
-	  else
-	  {
-		  LogInfo("Mounting SD card ...");
-		  SdCardMount();
-	  }
-	  LogInfo("Init IMU...");
-	  MPU6050_Init(&hi2c3);
+	LogInfo ("Checking SD card ...");
+	if( SdCardPresent() != SD_OK)
+	{
+	  LogWarn("SD card not inserted");
+	}
+	else
+	{
+	  LogInfo("Mounting SD card ...");
+	  SdCardMount();
+	}
+	LogInfo("Init IMU...");
+	MPU6050_Init(&hi2c3);
 }
 
 void mainApp (void)
@@ -61,11 +62,22 @@ void mainApp (void)
 	  {
 	  case BOOT:
 		  //Nothing implemented
+		  displayWriteText( 5, 30, "Press a button to start");
 		  deviceStates = IDLE;
 
 		  break;
 
 	  case IDLE:
+
+		  //Wait for buttonpres
+		  if(buttonPressed == 1)
+		  {
+			  buttonPressed =0;
+			  displayClear();
+			  displayPutHeader();
+			  displayAccelerometerValues(0, 0, 0);
+			  deviceStates = INIT_MEASUREMENTS;
+		  }
 
 		  break;
 

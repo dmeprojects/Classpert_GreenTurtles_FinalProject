@@ -31,7 +31,7 @@ sdResult_t sdResult;
 
 sdResult_t SdCardPresent(void)
 {
-	  if (HAL_GPIO_ReadPin(GPIOA, SD_CS_Pin) == 1)
+	  if (HAL_GPIO_ReadPin(SD_DETECT_GPIO_Port, SD_DETECT_Pin) == 1)
 	  {
 		  return SD_OK;
 	  }
@@ -46,7 +46,7 @@ sdResult_t SdCardMount(void)
 {
 	FRESULT fresult;
 
-	if( SdCardPresent() != 1)
+	if( SdCardPresent() == 1)
 	{
 		LogError("No SD card inserted");
 		return GEN_ERROR;
