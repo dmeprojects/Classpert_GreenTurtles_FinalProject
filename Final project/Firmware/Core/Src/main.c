@@ -158,7 +158,7 @@ int main(void)
   MX_SDIO_SD_Init();
   /* USER CODE BEGIN 2 */
 
-  //HAL_Delay(3000);
+  //HAL_Delay(3000);	//Delay allows us to reconnect usb cdc after reboot
 
   /*Print Firmware version*/
   LogInfo( "Classpert Green Turtels Final project");
@@ -167,14 +167,11 @@ int main(void)
   LogInfo( "Created by Nick Meynen");
 
 
-
   /*Boot up all perhiperhals:
    * Display
    * IMU
    * RGB LED*/
   startUp();
-
-  Error_Handler();
 
   /* USER CODE END 2 */
 
@@ -618,17 +615,25 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	__NOP();
+	//HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
+	//Start timer
+	if(GPIO_Pin == BUTTON1)
+	{
+		HAL_TIM_Base_Start_IT(&htim2);
+	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	/*
-	if(htim-> Instance == &htim2)	//Button debounce timer
-	{
 
+	if(htim->Instance == TIM2)	//Button debounce timer
+	{
+		if(HAL_GPIO_ReadPin(GPIOA, BUTTON1) == 1)
+		{
+			HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
+		}
 	}
-	*/
+
 }
 
 void HAL_DMA_Callback(DMA_HandleTypeDef * hdma)
