@@ -35,6 +35,7 @@
 #include "stdarg.h"
 #include "terminalColorCodes.h"
 #include "logging.h"
+#include "sd_handler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +48,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define ERROR_LED_DELAY	1000000
+#define	ERROR_PRINT_DELAY	50
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
 //#define log(message) printlog message
@@ -123,23 +126,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	unsigned char usbString[200];
-	int32_t usbStringLength = 0;
-	unsigned char * pUsbString = usbString;
-
-
-	uint8_t rtext[_MAX_SS];/* File read buffer */
-	uint32_t byteswritten, bytesread; /* File write/read counts */
-	uint8_t wtext[] = "STM32 FATFS works great!"; /* File write buffer */
-
-	/*SD card test variables*/
-//	FRESULT res;
-//	FATFS *fs;
-//	uint32_t byteswritten, bytesread;
-//	uint8_t sdWriteString[] = "SD card test";
-//	uint8_t sdReadString[_MAX_SS];
-//	DWORD freeSpace;
-
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -181,19 +167,6 @@ int main(void)
   LogInfo( "Created by Nick Meynen");
 
 
-  if (HAL_GPIO_ReadPin(GPIOA, SD_CS_Pin) == 1)
-  {
-	  SdCardpresentVar = 1;
-	  LogInfo("SD card inserted");
-  }
-  else
-  {
-	  SdCardpresentVar = 0;
-	  LogWarn("No SD card inserted");
-
-  }
-
-  ConsoleInit();
 
   /*Boot up all perhiperhals:
    * Display
@@ -201,9 +174,7 @@ int main(void)
    * RGB LED*/
   startUp();
 
-  SdCardMount();
-
-
+  Error_Handler();
 
   /* USER CODE END 2 */
 
@@ -700,11 +671,22 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+	uint32_t lCounter = ERROR_PRINT_DELAY + 1;
+	uint32_t lDelay = 0;
   __disable_irq();
+
+
   while (1)
   {
 	  HAL_GPIO_TogglePin(GPIOD, LED_RED);
-	  HAL_Delay(200);
+	  if (lCounter++ > (ERROR_PRINT_DELAY))
+	  {
+		  LogError("Error Handler triggered");
+		  lCounter = 0;
+	  }
+	  while(lDelay < ERROR_LED_DELAY){lDelay++;}
+	  lDelay = 0;
+
   }
   /* USER CODE END Error_Handler_Debug */
 }

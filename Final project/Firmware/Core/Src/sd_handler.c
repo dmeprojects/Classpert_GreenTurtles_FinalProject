@@ -29,7 +29,7 @@ uint32_t total, free_space;
 
 sdResult_t sdResult;
 
-static sdResult_t SdCardPresent(void)
+sdResult_t SdCardPresent(void)
 {
 	  if (HAL_GPIO_ReadPin(GPIOA, SD_CS_Pin) == 1)
 	  {

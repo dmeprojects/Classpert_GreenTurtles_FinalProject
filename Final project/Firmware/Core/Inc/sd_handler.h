@@ -15,6 +15,8 @@ typedef enum {
 	SD_OK
 } sdResult_t;
 
+sdResult_t SdCardPresent(void);
+
 sdResult_t SdCardMount(void);
 sdResult_t SdCardUnMount(void);
 

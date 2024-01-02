@@ -20,6 +20,10 @@
 
 #include "mpu6050.h"
 
+#include "logging.h"
+
+#include "sd_handler.h"
+
 struct usbCommunication usbCom;
 
 extern I2C_HandleTypeDef hi2c3;
@@ -28,9 +32,24 @@ extern deviceStates_t deviceStates;
 
 void startUp (void)
 {
+	LogInfo("Init Display...");
 	  initDisplay();
 	  displayPutHeader();
-	  ///displayAccelerometerValues(0,0,0);
+
+	  LogInfo("Init console ...");
+	  ConsoleInit();
+
+	  LogInfo ("Checking SD card ...");
+	  if( SdCardPresent() != SD_OK)
+	  {
+		  LogWarn("SD card not inserted");
+	  }
+	  else
+	  {
+		  LogInfo("Mounting SD card ...");
+		  SdCardMount();
+	  }
+	  LogInfo("Init IMU...");
 	  MPU6050_Init(&hi2c3);
 }
 
@@ -51,6 +70,8 @@ void mainApp (void)
 		  break;
 
 	  case INIT_MEASUREMENTS:
+
+		  ///displayAccelerometerValues(0,0,0);
 
 		  break;
 
