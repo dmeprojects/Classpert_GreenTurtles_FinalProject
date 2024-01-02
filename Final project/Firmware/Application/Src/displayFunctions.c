@@ -149,13 +149,13 @@ int16_t displayWriteText( uint8_t xPos, uint8_t yPos, char * textToWrite)
 
 	if (strlen(textToWrite) > DISPLAYSIZE_X)
 	{
-		LogError("Text to long, text may not exeeding %d chars", DISPLAYSIZE_X);
+		logError("Text to long, text may not exeeding %d chars", DISPLAYSIZE_X);
 		return -1;
 	}
 
 	if(xPos > DISPLAYSIZE_X || yPos > DISPLAYSIZE_Y)
 	{
-		LogError("Cursor position out of display range");
+		logError("Cursor position out of display range");
 		return -1;
 	}
 

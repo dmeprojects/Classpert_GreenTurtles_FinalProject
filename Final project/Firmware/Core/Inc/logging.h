@@ -20,10 +20,10 @@
 #endif
 
 #if LIBRARY_LOG_LEVEL == LOG_INFO
-#define LogError( ... )		log( (SERIAL_BRIGHT_RED_CHARS) ); log( ("ERROR: ") );log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
-#define LogInfo( ... )		log( (SERIAL_BRIGHT_GREEN_CHARS) ); log(("INFO: "));log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) ); log(("\r\n"))
-#define	LogDebug( ... )		log( (SERIAL_DEFAULT_COLORS) ); log(("DEBUG: "));log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) ); log(("\r\n"))
-#define	LogWarn( ... )		log( (SERIAL_BRIGHT_YELLOW_CHARS) ); log(("WARNING: "));log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) );; log(("\r\n"))
+#define logError( ... )		log( (SERIAL_BRIGHT_RED_CHARS) ); log( ("ERROR: ") );log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
+#define logInfo( ... )		log( (SERIAL_BRIGHT_GREEN_CHARS) ); log(("INFO: "));log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	logDebug( ... )		log( (SERIAL_DEFAULT_COLORS) ); log(("DEBUG: "));log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) ); log(("\r\n"))
+#define	logWarn( ... )		log( (SERIAL_BRIGHT_YELLOW_CHARS) ); log(("WARNING: "));log( (LIBRARY_LOG_NAME) ); log( ("-> ") ); log( ( __VA_ARGS__ ) );; log(("\r\n"))
 
 #endif
 

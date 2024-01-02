@@ -23,6 +23,8 @@
 
 #include "sd_handler.h"
 
+#define LIBRARY_LOG_NAME	"APPLICATION"
+
 struct usbCommunication usbCom;
 
 extern I2C_HandleTypeDef hi2c3;
@@ -33,35 +35,60 @@ extern uint8_t buttonPressed;
 
 void startUp (void)
 {
-	LogInfo("Init Display...");
+	logInfo("Init Display...");
 	initDisplay();
 	displayPutHeader();
 
-	LogInfo("Init console ...");
+	logInfo("Init console ...");
 	ConsoleInit();
 
-	LogInfo ("Checking SD card ...");
-	if( SdCardPresent() != SD_OK)
+	logInfo ("Checking SD card ...");
+	if( sdCardPresent() != SD_OK)
 	{
-	  LogWarn("SD card not inserted");
+	  logWarn("SD card not inserted");
 	}
 	else
 	{
-	  LogInfo("Mounting SD card ...");
-	  SdCardMount();
+	  logInfo("Mounting SD card ...");
+	  sdCardMount();
 	}
-	LogInfo("Init IMU...");
+	logInfo("Init IMU...");
 	MPU6050_Init(&hi2c3);
 }
 
 void mainApp (void)
 {
+	sdResult_t result;
 	  ConsoleProcess();
 
 	  switch (deviceStates)
 	  {
 	  case BOOT:
 		  //Nothing implemented
+
+		  /*
+		   * TO DO:
+		   *
+		   * Create a function that finds the correct files with the number of measurements.
+		   * Remember the latest number +1.  This we need to create a new measurements file
+		   *
+		   * This must be a function that returns a true or false.
+		   *
+		   *
+		   * */
+
+		  result = checkFile("NumberOfMeasurements.txt");
+		  if( result == SD_OK)
+		  {
+			  //Read file
+		  }
+		  else
+		  {
+			  //create file
+			  createFile( "NumberOfMeasurements.txt");
+			  //write a 0 to the file
+
+		  }
 		  displayWriteText( 5, 30, "Press a button to start");
 		  deviceStates = IDLE;
 

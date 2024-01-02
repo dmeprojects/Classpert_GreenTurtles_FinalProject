@@ -162,10 +162,10 @@ int main(void)
   //HAL_Delay(3000);	//Delay allows us to reconnect usb cdc after reboot
 
   /*Print Firmware version*/
-  LogInfo( "Classpert Green Turtels Final project");
-  LogInfo("Aim-A-Lyzer, version: %d.%d.%d", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
-  LogInfo("Build on: %s at %s", __DATE__, __TIME__);
-  LogInfo( "Created by Nick Meynen");
+  logInfo( "Classpert Green Turtels Final project");
+  logInfo("Aim-A-Lyzer, version: %d.%d.%d", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
+  logInfo("Build on: %s at %s", __DATE__, __TIME__);
+  logInfo( "Created by Nick Meynen");
 
 
   /*Boot up all perhiperhals:
@@ -690,7 +690,7 @@ void Error_Handler(void)
 	  HAL_GPIO_TogglePin(GPIOD, LED_RED);
 	  if (lCounter++ > (ERROR_PRINT_DELAY))
 	  {
-		  LogError("Error Handler triggered");
+		  logError("Error Handler triggered");
 		  lCounter = 0;
 	  }
 	  while(lDelay < ERROR_LED_DELAY){lDelay++;}
