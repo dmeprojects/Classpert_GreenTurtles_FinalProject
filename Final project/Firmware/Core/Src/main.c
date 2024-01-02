@@ -34,6 +34,7 @@
 #include "string.h"
 #include "stdarg.h"
 #include "terminalColorCodes.h"
+#include "logging.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,11 +49,15 @@
 /* USER CODE BEGIN PD */
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
-#define log(message) printlog message
+//#define log(message) printlog message
 
 #define LIBRARY_LOG_LEVEL	LOG_INFO
 
+/*Define if the logging output has to be send trough UART or USB.  The USB doubles as the commandline connection.
+ *
+ * */
 #define LOGUART
+//#define LOGUSB
 
 /* USER CODE END PD */
 
@@ -99,49 +104,14 @@ static void MX_I2C3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SDIO_SD_Init(void);
 
-void printlog (const char * pc, ...);
 /* USER CODE BEGIN PFP */
-
-
-
-#if LIBRARY_LOG_LEVEL == LOG_INFO
-#define LogError( ... )		log( (SERIAL_BRIGHT_RED_CHARS) ); log( ("ERROR: ") ); log( ( __VA_ARGS__ ) ); log( ("\r\n") )
-#define LogInfo( ... )		log( (SERIAL_BRIGHT_GREEN_CHARS) ); log(("INFO: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
-#define	LogDebug( ... )		log( (SERIAL_DEFAULT_COLORS) ); log(("DEBUG: ")); log( ( __VA_ARGS__ ) ); log(("\r\n"))
-#define	LogWarn( ... )		log( (SERIAL_BRIGHT_YELLOW_CHARS) ); log(("WARNING: ")); log( ( __VA_ARGS__ ) );; log(("\r\n"))
-
-#endif
-
-void printlog ( const char * pc, ...)
-{
-	va_list va;
-	va_start(va, pc);
-
-	vprintf(pc, va);
-
-	va_end(va);
-}
-
+uint8_t SdCardpresentVar = 0;
 
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-FATFS fs;
-FIL fil;
-FRESULT fresult;
-char SdBuffer[1024];
-
-UINT br, bw;
-
-//capacity related variables
-FATFS *pfs;
-DWORD free_clust;
-uint32_t total, free_space;
-
-
-
 
 /* USER CODE END 0 */
 
@@ -213,11 +183,13 @@ int main(void)
 
   if (HAL_GPIO_ReadPin(GPIOA, SD_CS_Pin) == 1)
   {
+	  SdCardpresentVar = 1;
 	  LogInfo("SD card inserted");
   }
   else
   {
-	  LogInfo("No SD card inserted");
+	  SdCardpresentVar = 0;
+	  LogWarn("No SD card inserted");
 
   }
 
@@ -229,45 +201,8 @@ int main(void)
    * RGB LED*/
   startUp();
 
-  /*SD card test*/
-  fresult = f_mount(&SDFatFS, (TCHAR const *)SDPath, 0);
-  if(fresult != FR_OK)
-  {
-	  LogError("Failed to init SD card with error: %d", fresult);
-	  Error_Handler();
-  }
+  SdCardMount();
 
-//  fresult = f_mkfs((TCHAR const*)SDPath, FM_FAT32, 0, rtext, sizeof(rtext));	//Create a FAT volume
-//  if( fresult != FR_OK)
-//  {
-//      Error_Handler();
-//  }
-//  else
-//  {
-	  fresult = f_open(&SDFile, "STM32_TST_2.txt", FA_CREATE_ALWAYS | FA_WRITE);
-
-	  if (fresult != FR_OK)
-	  {
-		  LogError("Failed to open file on SD card with error: %d", fresult);
-		  Error_Handler();
-	  }
-	  else
-	  {
-		  fresult = f_write(&SDFile, wtext, strlen((char*)wtext), (void*)&byteswritten);
-
-		  if (fresult != FR_OK || byteswritten == 0)
-		  {
-			  LogError("Failed to create file on SD card with error: %d", fresult);
-			  Error_Handler();
-		  }
-		  else
-		  {
-			  f_close(&SDFile);
-		  }
-	  }
-//  }
-
-  f_mount(&SDFatFS, (TCHAR const *) NULL, 0);
 
 
   /* USER CODE END 2 */

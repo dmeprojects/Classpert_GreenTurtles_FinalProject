@@ -30,7 +30,7 @@ void startUp (void)
 {
 	  initDisplay();
 	  displayPutHeader();
-	  displayAccelerometerValues(0,0,0);
+	  ///displayAccelerometerValues(0,0,0);
 	  MPU6050_Init(&hi2c3);
 }
 
@@ -41,6 +41,8 @@ void mainApp (void)
 	  switch (deviceStates)
 	  {
 	  case BOOT:
+		  //Nothing implemented
+		  deviceStates = IDLE;
 
 		  break;
 

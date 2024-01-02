@@ -1,10 +1,5 @@
 /*
- * terminalColorCodes.h
- *
- *  Created on: 03 Apr 2023
- *      Author: NMeyne
- *
- *  Defines for printing serial colors
+ *  Defines for changing the colours in the serial terminal
  *
  *  info source:
  *
@@ -21,6 +16,7 @@
 /*Use default color scheme*/
 #define SERIAL_DEFAULT_COLORS "\033[0;39m"
 
+/*Reset color codes*/
 #define SERIAL_RESET_COLORS   "\033[m"
 
 /*Foreground colors*/
@@ -56,8 +52,6 @@
 #define SERIAL_GOLINEUP                "\033[1A"
 #define SERIAL_GOSIDEWAYS              "\033[10C"
 
-#endif /* INCLUDE_TERMINALCOLORCODES_H_ */
-
 /*
  * terminal cursor movement
  *
@@ -67,4 +61,8 @@
  *  puts("\033[5A");  // move cursor up 5 lines
  *
  * */
+
+#endif /* INCLUDE_TERMINALCOLORCODES_H_ */
+
+
 
