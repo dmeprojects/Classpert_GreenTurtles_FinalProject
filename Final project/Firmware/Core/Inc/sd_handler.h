@@ -45,6 +45,9 @@ sdResult_t checkMeasurementsFolder (void);
 sdResult_t checkConfigFolder (void);
 
 sdResult_t createMeasurementFile(void);
+sdResult_t addNewMeasurement(char * string);
+void closeMeasurementFile(void);
+
 
 
 

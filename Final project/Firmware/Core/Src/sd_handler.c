@@ -18,10 +18,8 @@
 extern uint8_t SdCardpresent;
 
 FATFS fs;
-FIL fil;
-//FRESULT fresult;
+FIL gFile;
 char SdBuffer[1024];
-
 UINT br, bw;
 
 //capacity related variables
@@ -207,7 +205,7 @@ sdResult_t checkMeasurementsFolder (void)
 		measurementFile.fileNumber++;
 	}
 
-	logInfo("Number of measurement files found: %d", measurementFile.fileNumber);
+	logInfo("Number of measurement files found: %d", measurementFile.fileNumber++);	//Increment with one after printout, to set value correct for next measurement
 
 	return SD_OK;
 }
@@ -257,8 +255,52 @@ sdResult_t checkConfigFolder (void)
 
 sdResult_t createMeasurementFile(void)
 {
+	FRESULT fResult;
+	char lPathName[100];
 
+	sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_%d", measurementFile.fileNumber++);
+
+	logInfo("Creating file: %s", lPathName);
+
+	fResult = f_open(&gFile, lPathName, FA_CREATE_ALWAYS | FA_WRITE);
+
+	if (fResult != FR_OK)
+	{
+		logError("Failed to create measurement file with error: %d", fResult);
+
+		return GEN_ERROR;
+	}
+
+	return SD_OK;
 }
+
+sdResult_t addNewMeasurement(char * string)
+{
+	FRESULT fResult;
+	UINT bytesWritten, bytesToWrite;
+
+	bytesToWrite = strlen(string);
+
+	logInfo("Adding to file: %s, with length: %d", string, bytesToWrite);
+
+	fResult = f_write(&gFile, string, bytesToWrite, &bytesWritten);
+
+	if(fResult != FR_OK)
+	{
+		logError("Failed to write to file with error: %d",fResult);
+		f_close(&gFile);
+		return GEN_ERROR;
+	}
+
+	return SD_OK;
+}
+
+
+void closeMeasurementFile(void)
+{
+	f_close(&gFile);
+}
+
 
 
 

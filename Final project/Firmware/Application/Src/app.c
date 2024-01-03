@@ -58,7 +58,7 @@ void startUp (void)
 
 void mainApp (void)
 {
-	sdResult_t result;
+	uint32_t tick;
 	  ConsoleProcess();
 
 	  switch (deviceStates)
@@ -97,12 +97,33 @@ void mainApp (void)
 			  displayClear();
 			  displayPutHeader();
 			  displayAccelerometerValues(0, 0, 0);
+			  tick = HAL_GetTick();
+			  logInfo("Tick: %d", tick);
 			  deviceStates = INIT_MEASUREMENTS;
 		  }
 
 		  break;
 
 	  case INIT_MEASUREMENTS:
+
+		  //create file
+		  createMeasurementFile();
+		  HAL_Delay(500);
+		  addNewMeasurement("12345\n\r");
+		  HAL_Delay(500);
+		  addNewMeasurement("6789\n\r");
+		  HAL_Delay(500);
+		  addNewMeasurement("ABCDE\n\r");
+		  HAL_Delay(500);
+		  addNewMeasurement("FGHIJ\n\r");
+
+		  closeMeasurementFile();
+
+		  deviceStates = INIT_MEASUREMENTS;
+
+
+
+
 
 		  ///displayAccelerometerValues(0,0,0);
 
