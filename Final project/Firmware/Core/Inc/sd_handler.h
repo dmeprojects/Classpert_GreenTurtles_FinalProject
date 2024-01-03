@@ -8,6 +8,12 @@
 #ifndef INC_SD_HANDLER_H_
 #define INC_SD_HANDLER_H_
 
+#define MEASUREMENTS_FOLDER		"MEASUREMENTS"
+#define	CONFIG_MAP				"CONFIG\"
+#define	CONFIG_FILE				"SETTINGS.INI"
+#define	MEASUREMENT_FILE		"MEASUREMENT_"	//Add number after the _ character
+#define	MEASUREMENT_FILETYPE	".TXT"
+
 
 
 typedef enum {
@@ -29,6 +35,7 @@ sdResult_t checkFile (char * fileName);
 
 sdResult_t findFolder (char * folderName);
 
+sdResult_t checkDefaultMaps (void);
 
 
 

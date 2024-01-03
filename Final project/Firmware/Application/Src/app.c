@@ -77,18 +77,22 @@ void mainApp (void)
 		   *
 		   * */
 
-		  result = checkFile("NumberOfMeasurements.txt");
-		  if( result == SD_OK)
-		  {
-			  //Read file
-		  }
-		  else
-		  {
-			  //create file
-			  createFile( "NumberOfMeasurements.txt");
-			  //write a 0 to the file
+		  //Check file system if there is a map "measurements"
 
-		  }
+		  checkDefaultMaps();
+
+//		  result = checkFile("NumberOfMeasurements.txt");
+//		  if( result == SD_OK)
+//		  {
+//			  //Read file
+//		  }
+//		  else
+//		  {
+//			  //create file
+//			  createFile( "NumberOfMeasurements.txt");
+//			  //write a 0 to the file
+//
+//		  }
 		  displayWriteText( 5, 30, "Press a button to start");
 		  deviceStates = IDLE;
 

@@ -161,6 +161,55 @@ else
 }
 */
 
+sdResult_t checkDefaultMaps (void)
+{
+	//Check for map measurements
+	FRESULT fResult;
+	FILINFO fInfo;
+	DIR dir;
+
+	//find folder
+	fResult = f_stat(MEASUREMENTS_FOLDER, &fInfo);
+
+	switch (fResult)
+	{
+	case FR_OK:
+		logInfo("Folder found");
+		break;
+	case FR_NO_PATH:
+		logInfo("No measurements folder found, creatign one");
+		fResult = f_mkdir(MEASUREMENTS_FOLDER);
+		if(fResult != FR_OK)
+		{
+			logError("Failed to create measurements folder with error: %d", fResult);
+			return GEN_ERROR;
+		}
+		break;
+	default:
+		logError("An error occured: %d", fResult);
+		return GEN_ERROR;
+		break;
+	}
+
+	//So folder exists, check the number of measurements files it contains
+	fResult = f_findfirst(&dir, &fInfo, "0:/MEASUREMENTS/", "MEASUREMENT_???.TXT");
+
+	while (fResult == FR_OK && fInfo.fname[0])
+	{
+		logInfo("%s", fInfo.fname);
+		fResult = f_findnext(&dir, &fInfo);
+	}
+//	fResult = f_chdir("/" + MEASUREMENTS_FOLDER);
+//	if (fResult != FR_OK)
+//	{
+//		logError("Failed to switch directory with error %d", fResult);
+//		return GEN_ERROR;
+//	}
+
+
+
+}
+
 
 
 
