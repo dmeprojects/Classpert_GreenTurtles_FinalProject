@@ -631,6 +631,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	if(htim->Instance == TIM2)	//Button debounce timer
 	{
+		HAL_TIM_Base_Stop_IT(&htim2);
 		if(HAL_GPIO_ReadPin(GPIOA, BUTTON1) == 1)
 		{
 			HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);

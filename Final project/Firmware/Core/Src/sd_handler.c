@@ -207,6 +207,8 @@ sdResult_t checkMeasurementsFolder (void)
 
 	logInfo("Number of measurement files found: %d", measurementFile.fileNumber++);	//Increment with one after printout, to set value correct for next measurement
 
+	f_close(&fInfo);
+
 	return SD_OK;
 }
 
@@ -250,6 +252,7 @@ sdResult_t checkConfigFolder (void)
 		fResult = f_findnext(&dir, &fInfo);
 	}
 
+	f_close(&fInfo);
 	return SD_OK;
 }
 

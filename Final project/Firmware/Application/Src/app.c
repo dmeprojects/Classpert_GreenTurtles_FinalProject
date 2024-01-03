@@ -119,7 +119,7 @@ void mainApp (void)
 
 		  closeMeasurementFile();
 
-		  deviceStates = INIT_MEASUREMENTS;
+		  deviceStates = IDLE;
 
 
 
