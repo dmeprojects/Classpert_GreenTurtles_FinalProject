@@ -31,6 +31,8 @@ uint32_t total, free_space;
 
 sdResult_t sdResult;
 
+MEASUREMENTFILE measurementFile;
+
 sdResult_t sdCardPresent(void)
 {
 	  if (HAL_GPIO_ReadPin(SD_DETECT_GPIO_Port, SD_DETECT_Pin) == 1)
@@ -161,12 +163,15 @@ else
 }
 */
 
-sdResult_t checkDefaultMaps (void)
+sdResult_t checkMeasurementsFolder (void)
 {
 	//Check for map measurements
 	FRESULT fResult;
 	FILINFO fInfo;
 	DIR dir;
+
+	//Reset number of files
+	measurementFile.fileNumber = 0;
 
 	//find folder
 	fResult = f_stat(MEASUREMENTS_FOLDER, &fInfo);
@@ -174,9 +179,10 @@ sdResult_t checkDefaultMaps (void)
 	switch (fResult)
 	{
 	case FR_OK:
-		logInfo("Folder found");
+		logInfo("%s Folder found", MEASUREMENTS_FOLDER);
 		break;
 	case FR_NO_PATH:
+	case FR_NO_FILE:
 		logInfo("No measurements folder found, creatign one");
 		fResult = f_mkdir(MEASUREMENTS_FOLDER);
 		if(fResult != FR_OK)
@@ -192,21 +198,65 @@ sdResult_t checkDefaultMaps (void)
 	}
 
 	//So folder exists, check the number of measurements files it contains
-	fResult = f_findfirst(&dir, &fInfo, "0:/MEASUREMENTS/", "MEASUREMENT_???.TXT");
+	fResult = f_findfirst(&dir, &fInfo, "0:/MEASUREMENTS", "MEASUREMENT_???.TXT");
 
 	while (fResult == FR_OK && fInfo.fname[0])
 	{
-		logInfo("%s", fInfo.fname);
+		logInfo("0:/%s/%s", MEASUREMENTS_FOLDER, fInfo.fname);
+		fResult = f_findnext(&dir, &fInfo);
+		measurementFile.fileNumber++;
+	}
+
+	logInfo("Number of measurement files found: %d", measurementFile.fileNumber);
+
+	return SD_OK;
+}
+
+sdResult_t checkConfigFolder (void)
+{
+	//Check for map measurements
+	FRESULT fResult;
+	FILINFO fInfo;
+	DIR dir;
+
+	//find folder
+	fResult = f_stat(CONFIG_FOLDER, &fInfo);
+
+	switch (fResult)
+	{
+	case FR_OK:
+		logInfo("%s Folder found", CONFIG_FOLDER);
+		break;
+	case FR_NO_FILE:
+	case FR_NO_PATH:
+		logInfo("No config folder found, creating one");
+		fResult = f_mkdir(CONFIG_FOLDER);
+		if(fResult != FR_OK)
+		{
+			logError("Failed to create config folder with error: %d", fResult);
+			return GEN_ERROR;
+		}
+		break;
+	default:
+		logError("An error occured: %d", fResult);
+		return GEN_ERROR;
+		break;
+	}
+
+	//So folder exists, check the number of measurements files it contains
+	fResult = f_findfirst(&dir, &fInfo, "0:/CONFIG", "CONF.TXT");
+
+	while (fResult == FR_OK && fInfo.fname[0])
+	{
+		logInfo("0:/%s/%s", MEASUREMENTS_FOLDER, fInfo.fname);
 		fResult = f_findnext(&dir, &fInfo);
 	}
-//	fResult = f_chdir("/" + MEASUREMENTS_FOLDER);
-//	if (fResult != FR_OK)
-//	{
-//		logError("Failed to switch directory with error %d", fResult);
-//		return GEN_ERROR;
-//	}
 
+	return SD_OK;
+}
 
+sdResult_t createMeasurementFile(void)
+{
 
 }
 

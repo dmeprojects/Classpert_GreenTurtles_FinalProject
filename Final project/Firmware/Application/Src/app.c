@@ -78,22 +78,12 @@ void mainApp (void)
 		   * */
 
 		  //Check file system if there is a map "measurements"
+		  checkMeasurementsFolder();
 
-		  checkDefaultMaps();
+		  checkConfigFolder();
 
-//		  result = checkFile("NumberOfMeasurements.txt");
-//		  if( result == SD_OK)
-//		  {
-//			  //Read file
-//		  }
-//		  else
-//		  {
-//			  //create file
-//			  createFile( "NumberOfMeasurements.txt");
-//			  //write a 0 to the file
-//
-//		  }
-		  displayWriteText( 5, 30, "Press a button to start");
+
+		  displayWriteText( 5, 30, "Press button to start");
 		  deviceStates = IDLE;
 
 		  break;
