@@ -137,30 +137,6 @@ sdResult_t checkFile (char * fileName)
 	return GEN_ERROR;
 }
 
-/*
-fresult = f_open(&SDFile, "STM32_TST_2.txt", FA_CREATE_ALWAYS | FA_WRITE);
-
-if (fresult != FR_OK)
-{
-	  logError("Failed to open file on SD card with error: %d", fresult);
-	  Error_Handler();
-}
-else
-{
-	  fresult = f_write(&SDFile, wtext, strlen((char*)wtext), (void*)&byteswritten);
-
-	  if (fresult != FR_OK || byteswritten == 0)
-	  {
-		  logError("Failed to create file on SD card with error: %d", fresult);
-		  Error_Handler();
-	  }
-	  else
-	  {
-		  f_close(&SDFile);
-	  }
-}
-*/
-
 sdResult_t checkMeasurementsFolder (void)
 {
 	//Check for map measurements
@@ -259,22 +235,33 @@ sdResult_t checkConfigFolder (void)
 sdResult_t createMeasurementFile(void)
 {
 	FRESULT fResult;
+	char lFileName[50];
 	char lPathName[100];
 
 	if( ++measurementFile.fileNumber < 10)
 	{
-		sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_00%d.txt", measurementFile.fileNumber);
+		sprintf(lFileName, "MEASUREMENT_00%d.txt", measurementFile.fileNumber);
 	}
 
 	if( measurementFile.fileNumber >= 10 && measurementFile.fileNumber < 100)
 	{
-		sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_0%d.txt", measurementFile.fileNumber);
+		sprintf(lFileName, "MEASUREMENT_0%d.txt", measurementFile.fileNumber);
 	}
 
 	if( measurementFile.fileNumber >= 100)
 	{
-		sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_%d.txt", measurementFile.fileNumber);
+		sprintf(lFileName, "MEASUREMENT_%d.txt", measurementFile.fileNumber);
 	}
+
+	if( measurementFile.fileNumber >= 1000)
+	{
+		logError("Max number of files reached!");
+		return GEN_ERROR;
+	}
+
+	measurementFile.savedFileNameLength = sprintf(measurementFile.savedFileName, lFileName);
+
+	sprintf(lPathName, "0:/MEASUREMENTS/%s", lFileName );
 
 	logInfo("Creating file: %s", lPathName);
 
@@ -316,6 +303,31 @@ void closeMeasurementFile(void)
 {
 	f_close(&gFile);
 }
+
+uint32_t returnNumberOfFiles (void)
+{
+	return measurementFile.fileNumber;
+}
+
+sdResult_t returnFileName( char * pFileName, uint32_t maxFileNameLength)
+{
+	int16_t savedFileNameLength;
+
+	savedFileNameLength = strlen(measurementFile.savedFileName);
+
+	if( savedFileNameLength > maxFileNameLength)
+	{
+		logError("Filenamebuffer is to small");
+		return GEN_ERROR;
+	}
+	else
+	{
+		strcpy(pFileName, measurementFile.savedFileName);
+		return SD_OK;
+	}
+}
+
+
 
 
 

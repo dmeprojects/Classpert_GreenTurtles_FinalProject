@@ -22,9 +22,13 @@ typedef enum {
 } sdResult_t;
 
 typedef struct {
-	uint8_t fileNumber;
+	uint32_t fileNumber;
 	uint32_t numberOfLinesRead;
 	uint32_t numberOfLinesWritten;
+
+	char savedFileName[50];
+	uint32_t savedFileNameLength;
+
 } MEASUREMENTFILE;
 
 sdResult_t sdCardPresent(void);
@@ -47,6 +51,9 @@ sdResult_t checkConfigFolder (void);
 sdResult_t createMeasurementFile(void);
 sdResult_t addNewMeasurement(char * string);
 void closeMeasurementFile(void);
+
+uint32_t returnNumberOfFiles (void);
+sdResult_t returnFileName( char * pFileName, uint32_t maxFileNameLength);
 
 
 

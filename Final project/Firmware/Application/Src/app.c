@@ -176,7 +176,9 @@ void mainApp (void)
 	  case MEASURE_FINISHED:
 		  sprintf(logString, "%lu samples taken", counter);
 		  displayClear();
-		  displayWriteText(8, 20,"File saved");
+		  displayWriteText(0, 9, logString );
+		  displayWriteText(20, 30,"File saved:");
+		  returnFileName(logString, 150);
 		  displayWriteText(0, 40, logString );
 		  deviceState = HEADER_SHOW;
 		  HAL_Delay(3000);
