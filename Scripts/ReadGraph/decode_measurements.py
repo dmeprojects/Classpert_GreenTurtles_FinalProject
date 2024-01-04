@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 
 def read_imu_data(file_path):
@@ -25,28 +26,36 @@ def read_imu_data(file_path):
 
     return data
 
-def plot_imu_data(data):
+def plot_imu_data(data, file_name):
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(10, 6))
 
     ax1.plot(data['system_tick'], data['accelerometer']['x'], label='X-axis')
     ax1.plot(data['system_tick'], data['accelerometer']['y'], label='Y-axis')
     ax1.plot(data['system_tick'], data['accelerometer']['z'], label='Z-axis')
-    ax1.set_title('Accelerometer Values')
+    ax1.set_title(f'Accelerometer Values ({file_name})')
     ax1.set_ylabel('Acceleration')
     ax1.legend()
 
     ax2.plot(data['system_tick'], data['gyroscope']['x'], label='X-axis')
     ax2.plot(data['system_tick'], data['gyroscope']['y'], label='Y-axis')
     ax2.plot(data['system_tick'], data['gyroscope']['z'], label='Z-axis')
-    ax2.set_title('Gyroscope Values')
+    ax2.set_title(f'Gyroscope Values ({file_name})')
     ax2.set_ylabel('Angular Velocity')
     ax2.set_xlabel('System Tick Time')
     ax2.legend()
 
-    plt.tight_layout()
+
+    plt.tight_layout()  
+    
+    plt.get_current_fig_manager().set_window_title(file_name) 
+    
     plt.show()
 
 if __name__ == "__main__":
-    file_path = 'D:\Github\Classpert_GreenTurtles_FinalProject\Scripts\ReadGraph\meas_files\MEASUREMENT_007.txt'  # Replace with the actual path to your file
+    file_path = r'D:\Github\Classpert_GreenTurtles_FinalProject\Scripts\ReadGraph\meas_files\MEASUREMENT_004.txt'  # Replace with the actual path to your file    
     imu_data = read_imu_data(file_path)
-    plot_imu_data(imu_data)
+    file_name = os.path.basename(file_path)
+    print(file_name)
+    graph_name = file_name.split('.')[0]
+    
+    plot_imu_data(imu_data, file_name)

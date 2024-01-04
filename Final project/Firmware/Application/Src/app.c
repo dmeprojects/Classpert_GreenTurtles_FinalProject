@@ -93,6 +93,8 @@ void mainApp (void)
 
 	  case UPDATE_DISPLAY:
 		  displayWriteText( 5, 30, "Press button to start");
+
+		  logInfo("Press button to start sampling");
 		  deviceStates = IDLE;
 
 		  break;
@@ -123,6 +125,8 @@ void mainApp (void)
 		  }
 
 		  counter = 0;
+
+		  logWarn("Sampling in progress ...");
 
 		  deviceStates = SAMPLE_DATA;
 

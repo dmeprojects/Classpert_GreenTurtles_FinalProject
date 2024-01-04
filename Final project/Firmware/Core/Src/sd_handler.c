@@ -297,7 +297,7 @@ sdResult_t addNewMeasurement(char * string)
 
 	bytesToWrite = strlen(string);
 
-	logInfo("Adding to file: %s, with length: %d", string, bytesToWrite);
+	//logInfo("Adding to file: %s, with length: %d", string, bytesToWrite);
 
 	fResult = f_write(&gFile, string, bytesToWrite, &bytesWritten);
 
