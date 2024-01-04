@@ -112,8 +112,8 @@ void mainApp (void)
 
 	  case MEASURE_INIT:
 		  displayClear();
-		  displayWriteText(5,25, "Ready for sampling");
-		  displayWriteText( 10, 45, "Press OK to start");
+		  displayWriteText(7,10, "Ready for sampling");
+		  displayWriteText( 10, 38, "Press OK to start");
 		  logInfo("Press button to start sampling");
 		  deviceState = MEASURE_IDLE;
 		  break;
@@ -123,8 +123,8 @@ void mainApp (void)
 		  {
 			  buttonPressed = 0;
 			  displayClear();
-			  displayWriteText( 5, 30, "Sampling...");
-			  displayWriteText(0,50, "DO NOT REMOVE SD CARD!");
+			  displayWriteText( 15, 20, "Sampling...");
+			  displayWriteText(0,45, "DO NOT REMOVE SD CARD!");
 			  deviceState = MEASURE_CREATE_FILE;
 		  }
 		  break;
@@ -176,10 +176,10 @@ void mainApp (void)
 	  case MEASURE_FINISHED:
 		  sprintf(logString, "%lu samples taken", counter);
 		  displayClear();
-		  displayWriteText(0, 12, logString );
-		  displayWriteText(20, 30,"File saved:");
+		  displayWriteText(5, 10, logString );
+		  displayWriteText(0, 30,"File saved:");
 		  returnFileName(logString, 150);
-		  displayWriteText(0, 45, logString );
+		  displayWriteText(0, 50, logString );
 		  deviceState = HEADER_SHOW;
 		  HAL_Delay(4000);
 		  break;
