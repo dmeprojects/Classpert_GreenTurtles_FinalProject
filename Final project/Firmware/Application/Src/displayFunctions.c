@@ -10,6 +10,8 @@
 
 #include "logging.h"
 
+#include "version.h"
+
 #define LIBRARY_LOG_NAME	"DISPLAY"
 
 #define DISPLAYSIZE_X 	128
@@ -19,6 +21,7 @@
 #define LINESPACE	12
 #define SECONDCOLUMN	60
 
+#define	MINIFONT	Font_6x8
 #define SMALLFONT	Font_7x10
 
 //static lCurrentLine = FIRSTLINE;
@@ -40,11 +43,22 @@ void displayClear (void)
 
 void displayPutHeader (void)
 {
+
+	char versionString[100];
+
+	/*Create version string*/
+	sprintf(versionString, "FW:%d.%d.%d", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
 	/*Write title block*/
-	  ssd1306_SetCursor(7, 0);
-	  ssd1306_WriteString("Aim-A-Lyzer", Font_11x18, 0x01 );
-	  ssd1306_Line(0,17,128,17, 0x01);
-	  ssd1306_UpdateScreen();
+	ssd1306_SetCursor(5,20);
+	ssd1306_WriteString("Aim-A-Lyzer", Font_11x18, 0x01 );
+	ssd1306_Line(0,17,128,17, 0x01);	//Upper line
+	ssd1306_Line(0,39, 128,39, 0x01);	//Lower line
+	ssd1306_SetCursor(25,46);
+	ssd1306_WriteString(versionString, MINIFONT, 0x01 );
+	ssd1306_SetCursor(20,56);
+	ssd1306_WriteString("Press OK btn", MINIFONT, 0x01 );
+
+	ssd1306_UpdateScreen();
 }
 
 void displayAccelerometerValues(int32_t x, int32_t y, int32_t z)
@@ -159,8 +173,9 @@ int16_t displayWriteText( uint8_t xPos, uint8_t yPos, char * textToWrite)
 		return -1;
 	}
 
+	ssd1306_Fill(Black);
 	ssd1306_SetCursor(xPos, yPos);
-	ssd1306_WriteString(textToWrite, SMALLFONT, White);
+	ssd1306_WriteString(textToWrite, MINIFONT, White);
 
 	ssd1306_UpdateScreen();
 

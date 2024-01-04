@@ -114,7 +114,7 @@ static void MX_SDIO_SD_Init(void);
 static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 uint8_t sdCardpresentVar = 0;
-uint8_t buttonPressed = 0;
+uint32_t buttonPressed = 0;
 
 
 /* USER CODE END PFP */
@@ -182,9 +182,8 @@ int main(void)
    * Display
    * IMU
    * RGB LED*/
-  startUp();
-
-  HAL_Delay(2000);
+  //startUp();
+  startConsole();
 
   /* USER CODE END 2 */
 
@@ -581,9 +580,6 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
                           |Audio_RST_Pin, GPIO_PIN_RESET);
 
@@ -607,19 +603,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SD_CS_Pin */
-  GPIO_InitStruct.Pin = SD_CS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(SD_CS_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : SD_DETECT_Pin IMU_INT_Pin */
-  GPIO_InitStruct.Pin = SD_DETECT_Pin|IMU_INT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
   /*Configure GPIO pin : BOOT1_Pin */
   GPIO_InitStruct.Pin = BOOT1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -640,6 +623,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : IMU_INT_Pin */
+  GPIO_InitStruct.Pin = IMU_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(IMU_INT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SD_DET_Pin */
   GPIO_InitStruct.Pin = SD_DET_Pin;
@@ -675,7 +664,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	//HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
 	//Start timer
-	if(GPIO_Pin == BTN_OK)
+	if(GPIO_Pin == BTN_OK || GPIO_Pin == BTN_DWN || GPIO_Pin == BTN_UP)
 	{
 		HAL_TIM_Base_Start_IT(&htim2);
 	}
@@ -686,14 +675,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	if(htim->Instance == TIM2)	//Button debounce timer
 	{
-
 		htim2.Instance->SR &= ~TIM_SR_UIF;	//Clear int pending flag
 		htim2.Instance->SR &= ~TIM_SR_TIF;	//Clear trigger interrupt flag
 		htim2.Init.Period = 0;
-		if(HAL_GPIO_ReadPin(GPIOA, BTN_OK) == 1)
+
+		if(HAL_GPIO_ReadPin(GPIOE, BTN_OK) == 0)
 		{
 			HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
-			buttonPressed = 1;
+			buttonPressed = BTN_OK;
+		}
+
+		if(HAL_GPIO_ReadPin(GPIOE, BTN_UP) == 0)
+		{
+			HAL_GPIO_TogglePin(GPIOD, LED_GREEN);
+			buttonPressed = BTN_UP;
+		}
+
+		if(HAL_GPIO_ReadPin(GPIOE, BTN_DWN) == 0)
+		{
+			HAL_GPIO_TogglePin(GPIOD, LED_BLUE);
+			buttonPressed = BTN_DWN;
 		}
 
 		HAL_TIM_Base_Stop(&htim2);

@@ -33,7 +33,7 @@ MEASUREMENTFILE measurementFile;
 
 sdResult_t sdCardPresent(void)
 {
-	  if (HAL_GPIO_ReadPin(SD_DETECT_GPIO_Port, SD_DETECT_Pin) == 1)
+	  if (HAL_GPIO_ReadPin(SD_DET_GPIO_Port, SD_DET_Pin) == 0)
 	  {
 		  return SD_OK;
 	  }

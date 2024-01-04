@@ -8,6 +8,7 @@
 #ifndef APP_H_
 #define APP_H_
 
+void startConsole (void);
 void startUp (void);
 void mainApp (void);
 

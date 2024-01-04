@@ -26,12 +26,17 @@
 #define LIBRARY_LOG_NAME	"APPLICATION"
 
 struct usbCommunication usbCom;
-
 extern I2C_HandleTypeDef hi2c3;
 
-extern deviceStates_t deviceStates;
+extern uint32_t buttonPressed;
 
-extern uint8_t buttonPressed;
+deviceStates_t deviceState;
+
+void startConsole (void)
+{
+	logInfo("Init console ...");
+	ConsoleInit();
+}
 
 void startUp (void)
 {
@@ -47,11 +52,7 @@ void startUp (void)
 	{
 	  logWarn("SD card not inserted");
 	}
-	else
-	{
-	  logInfo("Mounting SD card ...");
-	  sdCardMount();
-	}
+
 	logInfo("Init IMU...");
 	MPU6050_Init(&hi2c3);
 }
@@ -62,80 +63,84 @@ void mainApp (void)
 	MPU6050_t imuData;
 	char logString[150] = {0};
 	static uint32_t counter = 0;
-	  ConsoleProcess();
 
-	  switch (deviceStates)
-	  {
+	ConsoleProcess();
+
+	switch (deviceState)
+	{
 	  case BOOT:
-		  //Nothing implemented
 
-		  /*
-		   * TO DO:
-		   *
-		   * Create a function that finds the correct files with the number of measurements.
-		   * Remember the latest number +1.  This we need to create a new measurements file
-		   *
-		   * This must be a function that returns a true or false.
-		   *
-		   *
-		   * */
+			logInfo("Init Display...");
+			initDisplay();
+			displayPutHeader();
+			logInfo("Init console ...");
+			ConsoleInit();
+			logInfo ("Checking SD card ...");
+			if( sdCardPresent() != SD_OK)
+			{
+			  logWarn("SD card not inserted");
+			}
+			logInfo("Init IMU...");
+			MPU6050_Init(&hi2c3);
+			deviceState = HEADER_SHOW;
+			break;
 
-		  //Check file system if there is a map "measurements"
-		  checkMeasurementsFolder();
 
-		  checkConfigFolder();
-
-		  displayWriteText( 5, 30, "Press button to start");
-		  deviceStates = IDLE;
-
+	  case HEADER_SHOW:
+		  displayPutHeader();
+		  deviceState = HEADER_IDLE;
 		  break;
 
-	  case UPDATE_DISPLAY:
-		  displayWriteText( 5, 30, "Press button to start");
+	  case HEADER_IDLE:
+		  if(buttonPressed == BTN_OK)
+		  {
+			  buttonPressed = 0;
+			  if (sdCardPresent() != SD_OK)
+			  {
+				  deviceState = ERROR_SD_NO_CARD;
+			  }
+			  else
+			  {
+				  logInfo("Mounting SD card ...");
+				  sdCardMount();
+				  checkMeasurementsFolder();
+				  checkConfigFolder();
+				  deviceState = MEASURE_INIT;
+			  }
+		  }
+		  break;
 
+	  case MEASURE_INIT:
+		  displayWriteText( 5, 30, "Press OK to start");
 		  logInfo("Press button to start sampling");
-		  deviceStates = IDLE;
-
+		  deviceState = MEASURE_IDLE;
 		  break;
 
-	  case IDLE:
-
-		  //Wait for buttonpres
-		  if(buttonPressed == 1)
+	  case MEASURE_IDLE:
+		  if(buttonPressed == BTN_OK)
 		  {
 			  buttonPressed = 0;
 			  displayClear();
-			  displayPutHeader();
-			  displayAccelerometerValues(0, 0, 0);
-			  tick = HAL_GetTick();
-			  logInfo("Tick: %d", tick);
-			  deviceStates = INIT_MEASUREMENTS;
+			  displayWriteText( 5, 30, "Sampling...");
+			  deviceState = MEASURE_CREATE_FILE;
 		  }
-
 		  break;
 
-	  case INIT_MEASUREMENTS:
-
-		  //create file
+	  case MEASURE_CREATE_FILE:
 		  if( createMeasurementFile() != SD_OK)
 		  {
 			  logError("Failed to create measurement file");
-			  deviceStates = UPDATE_DISPLAY;
+			  deviceState = ERROR_SD_CREATEFILE;
 		  }
-
-		  counter = 0;
-
-		  logWarn("Sampling in progress ...");
-
-		  deviceStates = SAMPLE_DATA;
-
+		  else
+		  {
+			  counter = 0;	//Reset sample counter
+			  logWarn("Sampling in progress ...");
+			  deviceState = MEASURE_SAMPLE;
+		  }
 		  break;
 
-	  case SAMPLE_DATA:
-
-		  //Get Timesatamp
-
-		  //MPU6050_Read_All(&hi2c3, &imuData);
+	  case MEASURE_SAMPLE:
 		  MPU6050_RAW_Read(&hi2c3, &imuData);
 
 		  tick = HAL_GetTick();
@@ -152,25 +157,30 @@ void mainApp (void)
 
 		  addNewMeasurement(logString);
 
-		  if(buttonPressed == 1)
+		  if(buttonPressed == BTN_OK || buttonPressed == BTN_UP || buttonPressed == BTN_DWN)
 		  {
 			  buttonPressed = 0;
 			  logInfo("Measurement done: %d measurements taken", counter);
-			  deviceStates = STORE_DATA;
+			  deviceState = MEASURE_STORE;
 		  }
-
 		  break;
 
-	  case STORE_DATA:
-
+	  case MEASURE_STORE:
 		  closeMeasurementFile();
+		  deviceState = HEADER_SHOW;
+		  break;
 
-		  deviceStates = UPDATE_DISPLAY;
-
+	  case ERROR_SD_NO_CARD:
+		  logError("No SD card found, please insert card first");
+		  displayWriteText( 5, 30, "NO SD CARD!");
+		  HAL_Delay(2000);
+		  deviceState = HEADER_SHOW;
 		  break;
 
 	  default:
-
+		  displayWriteText( 5, 30, "ERROR!");
+		  HAL_Delay(5000);
+		  deviceState = HEADER_SHOW;
 		  break;
-	  }
+	 }
 }

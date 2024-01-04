@@ -72,10 +72,6 @@ void Error_Handler(void);
 #define B1_Pin GPIO_PIN_0
 #define B1_GPIO_Port GPIOA
 #define B1_EXTI_IRQn EXTI0_IRQn
-#define SD_CS_Pin GPIO_PIN_4
-#define SD_CS_GPIO_Port GPIOA
-#define SD_DETECT_Pin GPIO_PIN_5
-#define SD_DETECT_GPIO_Port GPIOC
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
 #define BTN_UP_Pin GPIO_PIN_11
