@@ -61,7 +61,7 @@ void mainApp (void)
 	uint32_t tick;
 	MPU6050_t imuData;
 	char logString[150] = {0};
-	uint32_t counter = 0;
+	static uint32_t counter = 0;
 	  ConsoleProcess();
 
 	  switch (deviceStates)
@@ -132,10 +132,11 @@ void mainApp (void)
 
 		  //Get Timesatamp
 
-		  MPU6050_Read_All(&hi2c3, &imuData);
+		  //MPU6050_Read_All(&hi2c3, &imuData);
+		  MPU6050_RAW_Read(&hi2c3, &imuData);
 
 		  tick = HAL_GetTick();
-		  sprintf(logString, "%lu - %lu - %d;%d;%d - %d;%d;%d - %f\n\r",
+		  sprintf(logString, "%lu|%lu|%d;%d;%d|%d;%d;%d|%f\n",
 				  counter++,
 				  tick,
 				  imuData.Accel_X_RAW,
