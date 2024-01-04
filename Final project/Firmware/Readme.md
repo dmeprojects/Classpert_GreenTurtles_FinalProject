@@ -62,3 +62,7 @@ https://github.com/eziya/STM32_SPI_SDCARD/tree/master
 
 STM32 SD card with SDIO:
 https://www.youtube.com/watch?v=spVIZO-jbxE
+
+#Asci art:
+https://patorjk.com/software/taag/#p=testall&f=Big%20Money-sw&t=Aim-A-Lyzer
+

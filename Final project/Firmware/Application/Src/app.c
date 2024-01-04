@@ -59,6 +59,9 @@ void startUp (void)
 void mainApp (void)
 {
 	uint32_t tick;
+	MPU6050_t imuData;
+	char logString[150] = {0};
+	uint32_t counter = 0;
 	  ConsoleProcess();
 
 	  switch (deviceStates)
@@ -113,27 +116,52 @@ void mainApp (void)
 	  case INIT_MEASUREMENTS:
 
 		  //create file
-		  createMeasurementFile();
-		  //HAL_Delay(500);
-		  addNewMeasurement("12345\n\r");
-		  //HAL_Delay(500);
-		  addNewMeasurement("6789\n\r");
-		  //HAL_Delay(500);
-		  addNewMeasurement("ABCDE\n\r");
-		  //HAL_Delay(500);
-		  addNewMeasurement("FGHIJklmnop\n\r");
+		  if( createMeasurementFile() != SD_OK)
+		  {
+			  logError("Failed to create measurement file");
+			  deviceStates = UPDATE_DISPLAY;
+		  }
 
-		  closeMeasurementFile();
+		  counter = 0;
 
-		  deviceStates = UPDATE_DISPLAY;
+		  deviceStates = SAMPLE_DATA;
 
 		  break;
 
 	  case SAMPLE_DATA:
 
+		  //Get Timesatamp
+
+		  MPU6050_Read_All(&hi2c3, &imuData);
+
+		  tick = HAL_GetTick();
+		  sprintf(logString, "%lu - %lu - %d;%d;%d - %d;%d;%d - %f\n\r",
+				  counter++,
+				  tick,
+				  imuData.Accel_X_RAW,
+				  imuData.Accel_Y_RAW,
+				  imuData.Accel_Z_RAW,
+				  imuData.Gyro_X_RAW,
+				  imuData.Gyro_Y_RAW,
+				  imuData.Gyro_Z_RAW,
+				  imuData.Temperature);
+
+		  addNewMeasurement(logString);
+
+		  if(buttonPressed == 1)
+		  {
+			  buttonPressed = 0;
+			  logInfo("Measurement done: %d measurements taken", counter);
+			  deviceStates = STORE_DATA;
+		  }
+
 		  break;
 
 	  case STORE_DATA:
+
+		  closeMeasurementFile();
+
+		  deviceStates = UPDATE_DISPLAY;
 
 		  break;
 

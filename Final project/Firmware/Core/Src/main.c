@@ -36,6 +36,8 @@
 #include "terminalColorCodes.h"
 #include "logging.h"
 #include "sd_handler.h"
+
+#include "printHeader.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,6 +79,8 @@ DMA_HandleTypeDef hdma_i2c3_rx;
 
 RNG_HandleTypeDef hrng;
 
+RTC_HandleTypeDef hrtc;
+
 SD_HandleTypeDef hsd;
 DMA_HandleTypeDef hdma_sdio_rx;
 DMA_HandleTypeDef hdma_sdio_tx;
@@ -107,6 +111,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SDIO_SD_Init(void);
+static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 uint8_t sdCardpresentVar = 0;
 uint8_t buttonPressed = 0;
@@ -157,15 +162,20 @@ int main(void)
   MX_FATFS_Init();
   MX_SPI1_Init();
   MX_SDIO_SD_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
-  //HAL_Delay(3000);	//Delay allows us to reconnect usb cdc after reboot
+  printHeader();
+
+  HAL_Delay(1000);	//Delay allows us to reconnect usb cdc after reboot
 
   /*Print Firmware version*/
   logInfo( "Classpert Green Turtels Final project");
   logInfo("Aim-A-Lyzer, version: %d.%d.%d", FIRMWARE_MAJOR, FIRMWARE_MINOR, FIRMWARE_BUILD);
   logInfo("Build on: %s at %s", __DATE__, __TIME__);
   logInfo( "Created by Nick Meynen");
+
+  HAL_Delay(1000);	//Delay allows us to reconnect usb cdc after reboot
 
 
   /*Boot up all perhiperhals:
@@ -207,8 +217,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 8;
@@ -326,6 +337,41 @@ static void MX_RNG_Init(void)
   /* USER CODE BEGIN RNG_Init 2 */
 
   /* USER CODE END RNG_Init 2 */
+
+}
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
 
 }
 
