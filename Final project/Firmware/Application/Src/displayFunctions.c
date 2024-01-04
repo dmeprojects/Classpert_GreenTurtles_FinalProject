@@ -173,7 +173,7 @@ int16_t displayWriteText( uint8_t xPos, uint8_t yPos, char * textToWrite)
 		return -1;
 	}
 
-	ssd1306_Fill(Black);
+	//ssd1306_Fill(Black);
 	ssd1306_SetCursor(xPos, yPos);
 	ssd1306_WriteString(textToWrite, MINIFONT, White);
 

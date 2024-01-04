@@ -72,7 +72,6 @@ void mainApp (void)
 
 			logInfo("Init Display...");
 			initDisplay();
-			displayPutHeader();
 			logInfo("Init console ...");
 			ConsoleInit();
 			logInfo ("Checking SD card ...");
@@ -87,6 +86,7 @@ void mainApp (void)
 
 
 	  case HEADER_SHOW:
+		  displayClear();
 		  displayPutHeader();
 		  deviceState = HEADER_IDLE;
 		  break;
@@ -111,7 +111,9 @@ void mainApp (void)
 		  break;
 
 	  case MEASURE_INIT:
-		  displayWriteText( 5, 30, "Press OK to start");
+		  displayClear();
+		  displayWriteText(5,25, "Ready for sampling");
+		  displayWriteText( 10, 45, "Press OK to start");
 		  logInfo("Press button to start sampling");
 		  deviceState = MEASURE_IDLE;
 		  break;
@@ -121,7 +123,8 @@ void mainApp (void)
 		  {
 			  buttonPressed = 0;
 			  displayClear();
-			  displayWriteText( 5, 30, "Sampling...");
+			  displayWriteText( 5, 25, "Sampling...");
+			  displayWriteText(0,50, "DO NOT REMOVE SD CARD!");
 			  deviceState = MEASURE_CREATE_FILE;
 		  }
 		  break;
@@ -167,20 +170,31 @@ void mainApp (void)
 
 	  case MEASURE_STORE:
 		  closeMeasurementFile();
+		  deviceState = MEASURE_FINISHED;
+		  break;
+
+	  case MEASURE_FINISHED:
+		  sprintf(logString, "%lu samples taken", counter);
+		  displayClear();
+		  displayWriteText(8, 20,"File saved");
+		  displayWriteText(0, 40, logString );
 		  deviceState = HEADER_SHOW;
+		  HAL_Delay(3000);
 		  break;
 
 	  case ERROR_SD_NO_CARD:
+		  displayClear();
 		  logError("No SD card found, please insert card first");
 		  displayWriteText( 5, 30, "NO SD CARD!");
-		  HAL_Delay(2000);
 		  deviceState = HEADER_SHOW;
+		  HAL_Delay(2000);
 		  break;
 
 	  default:
+		  displayClear();
 		  displayWriteText( 5, 30, "ERROR!");
-		  HAL_Delay(5000);
 		  deviceState = HEADER_SHOW;
+		  HAL_Delay(5000);
 		  break;
 	 }
 }
