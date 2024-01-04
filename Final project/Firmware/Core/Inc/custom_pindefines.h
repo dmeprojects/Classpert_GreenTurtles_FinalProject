@@ -14,6 +14,9 @@
 #define	LED_BLUE	LD6_Pin
 
 #define BUTTON1		B1_Pin
+#define BTN_UP		BTN_UP_Pin
+#define	BTN_DWN		BTN_DWN_Pin
+#define BTN_OK		BTN_OK_Pin
 
 
 

@@ -78,6 +78,15 @@ void Error_Handler(void);
 #define SD_DETECT_GPIO_Port GPIOC
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
+#define BTN_UP_Pin GPIO_PIN_11
+#define BTN_UP_GPIO_Port GPIOE
+#define BTN_UP_EXTI_IRQn EXTI15_10_IRQn
+#define BTN_OK_Pin GPIO_PIN_13
+#define BTN_OK_GPIO_Port GPIOE
+#define BTN_OK_EXTI_IRQn EXTI15_10_IRQn
+#define BTN_DWN_Pin GPIO_PIN_15
+#define BTN_DWN_GPIO_Port GPIOE
+#define BTN_DWN_EXTI_IRQn EXTI15_10_IRQn
 #define LD4_Pin GPIO_PIN_12
 #define LD4_GPIO_Port GPIOD
 #define LD3_Pin GPIO_PIN_13

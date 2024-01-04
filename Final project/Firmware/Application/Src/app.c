@@ -85,7 +85,6 @@ void mainApp (void)
 
 		  checkConfigFolder();
 
-
 		  displayWriteText( 5, 30, "Press button to start");
 		  deviceStates = IDLE;
 

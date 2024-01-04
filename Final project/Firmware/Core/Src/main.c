@@ -626,6 +626,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : BTN_UP_Pin BTN_OK_Pin BTN_DWN_Pin */
+  GPIO_InitStruct.Pin = BTN_UP_Pin|BTN_OK_Pin|BTN_DWN_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
   /*Configure GPIO pins : LD4_Pin LD3_Pin LD5_Pin LD6_Pin
                            Audio_RST_Pin */
   GPIO_InitStruct.Pin = LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin
@@ -657,6 +663,9 @@ static void MX_GPIO_Init(void)
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
@@ -666,7 +675,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	//HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
 	//Start timer
-	if(GPIO_Pin == BUTTON1)
+	if(GPIO_Pin == BTN_OK)
 	{
 		HAL_TIM_Base_Start_IT(&htim2);
 	}
@@ -681,7 +690,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		htim2.Instance->SR &= ~TIM_SR_UIF;	//Clear int pending flag
 		htim2.Instance->SR &= ~TIM_SR_TIF;	//Clear trigger interrupt flag
 		htim2.Init.Period = 0;
-		if(HAL_GPIO_ReadPin(GPIOA, BUTTON1) == 1)
+		if(HAL_GPIO_ReadPin(GPIOA, BTN_OK) == 1)
 		{
 			HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
 			buttonPressed = 1;

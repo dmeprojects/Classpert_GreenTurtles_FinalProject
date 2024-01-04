@@ -52,7 +52,7 @@ def plot_imu_data(data, file_name):
     plt.show()
 
 if __name__ == "__main__":
-    file_path = r'D:\Github\Classpert_GreenTurtles_FinalProject\Scripts\ReadGraph\meas_files\MEASUREMENT_004.txt'  # Replace with the actual path to your file    
+    file_path = r'D:\Github\Classpert_GreenTurtles_FinalProject\Scripts\ReadGraph\meas_files\MEASUREMENT_007.txt'  # Replace with the actual path to your file    
     imu_data = read_imu_data(file_path)
     file_name = os.path.basename(file_path)
     print(file_name)
