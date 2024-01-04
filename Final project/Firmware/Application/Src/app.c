@@ -123,7 +123,7 @@ void mainApp (void)
 		  {
 			  buttonPressed = 0;
 			  displayClear();
-			  displayWriteText( 5, 25, "Sampling...");
+			  displayWriteText( 5, 30, "Sampling...");
 			  displayWriteText(0,50, "DO NOT REMOVE SD CARD!");
 			  deviceState = MEASURE_CREATE_FILE;
 		  }
@@ -176,12 +176,12 @@ void mainApp (void)
 	  case MEASURE_FINISHED:
 		  sprintf(logString, "%lu samples taken", counter);
 		  displayClear();
-		  displayWriteText(0, 9, logString );
+		  displayWriteText(0, 12, logString );
 		  displayWriteText(20, 30,"File saved:");
 		  returnFileName(logString, 150);
-		  displayWriteText(0, 40, logString );
+		  displayWriteText(0, 45, logString );
 		  deviceState = HEADER_SHOW;
-		  HAL_Delay(3000);
+		  HAL_Delay(4000);
 		  break;
 
 	  case ERROR_SD_NO_CARD:
