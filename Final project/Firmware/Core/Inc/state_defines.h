@@ -11,6 +11,7 @@
 typedef enum
 {
 		BOOT = 0,
+		UPDATE_DISPLAY,
 		IDLE,
 		INIT_MEASUREMENTS,
 		SAMPLE_DATA,

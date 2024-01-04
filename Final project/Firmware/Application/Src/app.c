@@ -88,12 +88,18 @@ void mainApp (void)
 
 		  break;
 
+	  case UPDATE_DISPLAY:
+		  displayWriteText( 5, 30, "Press button to start");
+		  deviceStates = IDLE;
+
+		  break;
+
 	  case IDLE:
 
 		  //Wait for buttonpres
 		  if(buttonPressed == 1)
 		  {
-			  buttonPressed =0;
+			  buttonPressed = 0;
 			  displayClear();
 			  displayPutHeader();
 			  displayAccelerometerValues(0, 0, 0);
@@ -108,24 +114,18 @@ void mainApp (void)
 
 		  //create file
 		  createMeasurementFile();
-		  HAL_Delay(500);
+		  //HAL_Delay(500);
 		  addNewMeasurement("12345\n\r");
-		  HAL_Delay(500);
+		  //HAL_Delay(500);
 		  addNewMeasurement("6789\n\r");
-		  HAL_Delay(500);
+		  //HAL_Delay(500);
 		  addNewMeasurement("ABCDE\n\r");
-		  HAL_Delay(500);
-		  addNewMeasurement("FGHIJ\n\r");
+		  //HAL_Delay(500);
+		  addNewMeasurement("FGHIJklmnop\n\r");
 
 		  closeMeasurementFile();
 
-		  deviceStates = IDLE;
-
-
-
-
-
-		  ///displayAccelerometerValues(0,0,0);
+		  deviceStates = UPDATE_DISPLAY;
 
 		  break;
 

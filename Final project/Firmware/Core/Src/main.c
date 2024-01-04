@@ -52,9 +52,10 @@
 #define	ERROR_PRINT_DELAY	50
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
-//#define log(message) printlog message
 
 #define LIBRARY_LOG_LEVEL	LOG_INFO
+
+#define	LIBRARY_LOG_NAME	"MAIN"
 
 /*Define if the logging output has to be send trough UART or USB.  The USB doubles as the commandline connection.
  *
@@ -106,7 +107,6 @@ static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SDIO_SD_Init(void);
-
 /* USER CODE BEGIN PFP */
 uint8_t sdCardpresentVar = 0;
 uint8_t buttonPressed = 0;
@@ -416,8 +416,8 @@ static void MX_TIM2_Init(void)
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 84;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_DOWN;
+  htim2.Init.Period = 20000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -631,12 +631,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	if(htim->Instance == TIM2)	//Button debounce timer
 	{
-		HAL_TIM_Base_Stop_IT(&htim2);
+
+		htim2.Instance->SR &= ~TIM_SR_UIF;	//Clear int pending flag
+		htim2.Instance->SR &= ~TIM_SR_TIF;	//Clear trigger interrupt flag
+		htim2.Init.Period = 0;
 		if(HAL_GPIO_ReadPin(GPIOA, BUTTON1) == 1)
 		{
 			HAL_GPIO_TogglePin(GPIOD, LED_ORANGE);
 			buttonPressed = 1;
 		}
+
+		HAL_TIM_Base_Stop(&htim2);
+		__HAL_TIM_SET_COUNTER(&htim2, 20000);
 	}
 
 }

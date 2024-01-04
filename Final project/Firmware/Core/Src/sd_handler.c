@@ -205,7 +205,7 @@ sdResult_t checkMeasurementsFolder (void)
 		measurementFile.fileNumber++;
 	}
 
-	logInfo("Number of measurement files found: %d", measurementFile.fileNumber++);	//Increment with one after printout, to set value correct for next measurement
+	logInfo("Number of measurement files found: %d", measurementFile.fileNumber);	//Increment with one after printout, to set value correct for next measurement
 
 	f_close(&fInfo);
 
@@ -261,7 +261,20 @@ sdResult_t createMeasurementFile(void)
 	FRESULT fResult;
 	char lPathName[100];
 
-	sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_%d", measurementFile.fileNumber++);
+	if( ++measurementFile.fileNumber < 10)
+	{
+		sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_00%d.txt", measurementFile.fileNumber);
+	}
+
+	if( measurementFile.fileNumber >= 10 && measurementFile.fileNumber < 100)
+	{
+		sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_0%d.txt", measurementFile.fileNumber);
+	}
+
+	if( measurementFile.fileNumber >= 100)
+	{
+		sprintf(lPathName, "0:/MEASUREMENTS/MEASUREMENT_%d.txt", measurementFile.fileNumber);
+	}
 
 	logInfo("Creating file: %s", lPathName);
 
