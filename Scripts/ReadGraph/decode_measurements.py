@@ -1,3 +1,4 @@
+import sys
 import os
 import matplotlib.pyplot as plt
 
@@ -52,10 +53,16 @@ def plot_imu_data(data, file_name):
     plt.show()
 
 if __name__ == "__main__":
-    file_path = r'D:\Github\Classpert_GreenTurtles_FinalProject\Scripts\ReadGraph\meas_files\MEASUREMENT_022.txt'  # Replace with the actual path to your file    
-    imu_data = read_imu_data(file_path)
-    file_name = os.path.basename(file_path)
-    print(file_name)
-    graph_name = file_name.split('.')[0]
     
+    if len(sys.argv) != 2:
+        print("Error: no file specified")
+        sys.exit(1)
+        
+    file_name = sys.argv[1]
+    standard_path = 'D:\Github\Classpert_GreenTurtles_FinalProject\Scripts\ReadGraph\meas_files\\'
+    file_path = ( standard_path + file_name)  # Replace with the actual path to your file    
+    imu_data = read_imu_data(file_path)
+    #file_name = os.path.basename(file_path)
+    print(file_name)
+    graph_name = file_name.split('.')[0]    
     plot_imu_data(imu_data, file_name)
