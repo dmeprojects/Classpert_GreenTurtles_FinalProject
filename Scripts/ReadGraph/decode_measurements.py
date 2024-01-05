@@ -1,4 +1,5 @@
 import sys
+import argparse
 import os
 import matplotlib.pyplot as plt
 
@@ -54,15 +55,35 @@ def plot_imu_data(data, file_name):
 
 if __name__ == "__main__":
     
+    parser = argparse.ArgumentParser('Specify the file in the default path or specify the full path.')
+    #parser.add_argument("-f", action = "store", required=True,  help='Specify the file MEASUREMENTS_XXX.TXT.')    
+    #parser.add_argument("-p", action = "store", required=False, help="Specify the full path to the file).")
+    
+    parser.add_argument('filename')
+    #parser.add_argument('pathname', required=False)
+    
+    args = parser.parse_args()
+    
+    print("printing args")
+    
+    print(args.filename)
+    
+    print("Args printed")
+
+    
+    file_path = args.filename
+        
+    if not os.path.isfile(file_path):
+        print(f"ERROR: file not found - {file_path}")
+        sys.exit[1]
+    
     if len(sys.argv) != 2:
         print("Error: no file specified")
-        sys.exit(1)
-        
-    file_name = sys.argv[1]
-    standard_path = 'D:\Github\Classpert_GreenTurtles_FinalProject\Scripts\ReadGraph\meas_files\\'
-    file_path = ( standard_path + file_name)  # Replace with the actual path to your file    
+        sys.exit(1)     
+
+
     imu_data = read_imu_data(file_path)
-    #file_name = os.path.basename(file_path)
+    file_name = os.path.basename(file_path)
     print(file_name)
     graph_name = file_name.split('.')[0]    
     plot_imu_data(imu_data, file_name)
