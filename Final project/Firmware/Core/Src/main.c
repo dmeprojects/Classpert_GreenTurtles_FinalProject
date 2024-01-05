@@ -165,6 +165,8 @@ int main(void)
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_Delay(200);
+
   printHeader();
 
   HAL_Delay(1000);	//Delay allows us to reconnect usb cdc after reboot
@@ -175,7 +177,7 @@ int main(void)
   logInfo("Build on: %s at %s", __DATE__, __TIME__);
   logInfo( "Created by Nick Meynen");
 
-  HAL_Delay(1000);	//Delay allows us to reconnect usb cdc after reboot
+  //HAL_Delay(1000);	//Delay allows us to reconnect usb cdc after reboot
 
 
   /*Boot up all perhiperhals:
