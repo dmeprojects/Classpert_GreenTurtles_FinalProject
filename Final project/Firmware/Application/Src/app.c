@@ -113,7 +113,10 @@ void mainApp (void)
 	  case MEASURE_INIT:
 		  displayClear();
 		  displayWriteText(7,10, "Ready for sampling");
-		  displayWriteText( 10, 38, "Press OK to start");
+		  displayWriteText( 10, 25, "Press OK to start");
+		  sprintf(logString, "%d files in folder",returnNumberOfFiles());
+		  displayWriteText( 8, 40, logString);
+
 		  logInfo("Press button to start sampling");
 		  deviceState = MEASURE_IDLE;
 		  break;

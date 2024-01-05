@@ -8,6 +8,7 @@
 #include "main.h"
 #include "fatfs.h"
 #include "string.h"
+#include "stdio.h"
 
 #include "logging.h"
 
@@ -144,6 +145,8 @@ sdResult_t checkMeasurementsFolder (void)
 	FILINFO fInfo;
 	DIR dir;
 
+	uint8_t fileCounter = 0;
+
 	//Reset number of files
 	measurementFile.fileNumber = 0;
 
@@ -177,6 +180,17 @@ sdResult_t checkMeasurementsFolder (void)
 	while (fResult == FR_OK && fInfo.fname[0])
 	{
 		logInfo("0:/%s/%s", MEASUREMENTS_FOLDER, fInfo.fname);
+
+		if(fileCounter < 50)
+		{
+			sprintf(measurementFile.filesInFolder[fileCounter], fInfo.fname);
+			fileCounter++;
+		}
+		else
+		{
+			logWarn("More than 50 files found");
+		}
+
 		fResult = f_findnext(&dir, &fInfo);
 		measurementFile.fileNumber++;
 	}
@@ -325,6 +339,18 @@ sdResult_t returnFileName( char * pFileName, uint32_t maxFileNameLength)
 		strcpy(pFileName, measurementFile.savedFileName);
 		return SD_OK;
 	}
+}
+
+sdResult_t listFiles(void)
+{
+	if (measurementFile.fileNumber == 0)
+	{
+		logError("No files found");
+		return GEN_ERROR;
+	}
+
+	return SD_OK;
+
 }
 
 

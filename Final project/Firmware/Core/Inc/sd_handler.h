@@ -29,6 +29,8 @@ typedef struct {
 	char savedFileName[50];
 	uint32_t savedFileNameLength;
 
+	char filesInFolder[50][25];
+
 } MEASUREMENTFILE;
 
 sdResult_t sdCardPresent(void);
