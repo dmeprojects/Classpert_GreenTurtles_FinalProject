@@ -165,7 +165,7 @@ int main(void)
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(200);
+  HAL_Delay(5000);
 
   printHeader();
 
