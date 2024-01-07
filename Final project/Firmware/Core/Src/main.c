@@ -165,11 +165,11 @@ int main(void)
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(5000);
+  HAL_Delay(3000);	//Delay allows to reconnect USB after reboot
 
   printHeader();
 
-  HAL_Delay(1000);	//Delay allows us to reconnect usb cdc after reboot
+  HAL_Delay(500);
 
   /*Print Firmware version*/
   logInfo( "Classpert Green Turtels Final project");
@@ -177,14 +177,6 @@ int main(void)
   logInfo("Build on: %s at %s", __DATE__, __TIME__);
   logInfo( "Created by Nick Meynen");
 
-  //HAL_Delay(1000);	//Delay allows us to reconnect usb cdc after reboot
-
-
-  /*Boot up all perhiperhals:
-   * Display
-   * IMU
-   * RGB LED*/
-  //startUp();
   startConsole();
 
   /* USER CODE END 2 */

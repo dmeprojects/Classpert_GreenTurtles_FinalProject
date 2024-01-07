@@ -4,7 +4,7 @@
 #define VERSION_STRING "Aim-A-Lyzer"
 
 #define FIRMWARE_MAJOR 0
-#define FIRMWARE_MINOR 0
-#define FIRMWARE_BUILD 428
+#define FIRMWARE_MINOR 1
+#define FIRMWARE_BUILD 0
 
 #endif // VERSION_H
